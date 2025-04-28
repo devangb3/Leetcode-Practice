@@ -1,6 +1,7 @@
-package leetcodepractice.src.com.app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class RodCutting {
@@ -34,13 +35,30 @@ public class RodCutting {
         }
         return dp[dp.length -1];
     }
+    public int[] findTwoLargest(int[] arr, int begin , int end){
+        int[] temp = Arrays.copyOfRange(arr, begin, end);
+        if(temp.length <= 3){
+            Arrays.sort(temp); 
+            return new int[]{temp[1], temp[2]};
+        }
+        int n = arr.length;
+        int[] A = findTwoLargest(temp, 0, n/2);
+        int[] B = findTwoLargest(temp, n/2 + 1, n);
+        List<Integer> tempList = new ArrayList<>();
+        for(int num : A) tempList.add(num);
+        for(int num : B) tempList.add(num);
+
+        Collections.sort(tempList);
+        return new int[]{tempList.get(2), tempList.get(3)};
+    }
     public static void main(String[] args) {
         RodCutting rc = new RodCutting();
         
-        int[] prices = {5,6,8,9,10};
+       /*  int[] prices = {5,6,8,9,10};
         int rodLength = 5;
 
         int maxProfit = rc.rodCuttingDP(prices, rodLength);
-        System.out.println("Maximum Obtainable Value: " + maxProfit);
+        System.out.println("Maximum Obtainable Value: " + maxProfit); */
+        System.out.println(rc.findTwoLargest(new int[]{7,2,6,9,1,4}, 0, 6));
     }
 }

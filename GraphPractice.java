@@ -1,4 +1,3 @@
-package leetcodepractice.src.com.app;
 
 import java.util.ArrayList;
 import java.util.HashMap;
