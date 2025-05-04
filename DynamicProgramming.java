@@ -52,19 +52,24 @@ public class DynamicProgramming {
         int[][] grid = new int[rows][cols];
         for(int i=0; i< rows; i++) grid[i][0] = 0;
         for(int i=0; i< cols; i++) grid[0][i] = 0;
-        String ans = "";
-        for (int i = 1; i < rows; i++) {
-            for (int j = 1; j < cols; j++) {
-                if(text1.charAt(i-1) == text2.charAt(j-1)){
-                    ans += text1.charAt(i-1);
-                    grid[i][j] = 1 + grid[i-1][j-1];
-                }
-                else{
-                    grid[i][j] = Math.max(grid[i-1][j], grid[i][j-1]);
-                }
+        for (int i = 1; i < grid.length; i++) {
+            for (int j = 1; j < grid[0].length; j++) {
+                if(text1.charAt(i-1) == text2.charAt(j-1)) grid[i][j] = grid[i-1][j-1] + 1;
+                else grid[i][j] = Math.max(grid[i-1][j], grid[i][j-1]);
             }
         }
-        System.out.println(ans);
+        StringBuilder ans = new StringBuilder();
+        int i = rows-1, j = cols-1;
+        while(i>0 && j>0){
+            if(text1.charAt(i-1) == text2.charAt(j-1)){
+                ans.append(text1.charAt(i-1));
+                i--;
+                j--;
+            } 
+            else if(grid[i-1][j] > grid[i][j-1]) i--;
+            else j--;
+        }
+        System.out.println(ans.reverse());
         return grid[rows-1][cols-1];
     }
     public int rob(int[] nums){
@@ -99,8 +104,72 @@ public class DynamicProgramming {
         
         return Math.max(list1.get(n-2), list2.get(n-1));
     }
+    public String longestPalindrome(String s){
+        int[] dp = new int[s.length()];
+        for (int i = 0; i < dp.length; i++) {
+            int n = dp.length-1;
+            while(n>=i){
+                if(isPalindrome(s.substring(i, n+1))){
+                    dp[i] = n-i+1;
+                    break;
+                }
+                n--;
+            }   
+        }
+        int maxIndex = 0;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < dp.length; i++) {
+            if(dp[i] > max){
+                max = dp[i];
+                maxIndex = i;
+            }
+        }
+        return s.substring(maxIndex, maxIndex + max);
+    }
+   
+    private boolean isPalindrome(String check){
+        int left = 0;
+        int right = check.length()-1;
+        while(right >= left){
+            if(check.charAt(right) != check.charAt(left)) return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int n = s1.length();
+        int m = s2.length();
+        if(s3.length() != n+m) return false;
+        boolean[][] dp = new boolean[n+1][m+1];
+
+        dp[0][0] = true;
+        for (int i = 1; i <= n; i++) {
+            dp[i][0] = s3.charAt(i-1) == s1.charAt(i-1) && dp[i-1][0];
+        }
+        for (int i = 1; i <= m; i++) {
+            dp[0][i] = s3.charAt(i-1) == s2.charAt(i-1) && dp[0][i-1];
+        }
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = 1; j < dp[0].length; j++) {
+                int k = i+j-1;
+                boolean possibleFromS1 = false;
+                if(s3.charAt(k) == s1.charAt(i-1) && dp[i-1][j]){
+                    possibleFromS1 = true;
+                }
+                boolean possibleFromS2 = false; 
+                if(s3.charAt(k) == s2.charAt(j-1) && dp[i][j-1]){
+                    possibleFromS2 = true;
+                } 
+                dp[i][j] = possibleFromS1 || possibleFromS2;
+            }
+        }
+        return dp[n][m];
+    }
+    
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
-        System.out.println(dp.rob2(new int[]{1,3,1,3,100}));
+        System.out.println(dp.longestCommonSubsequence("abcde", "ace"));
+        //System.out.println(dp.isInterleave("aabcc","dbbca","aadbbcbcac")); 
     }
 }
