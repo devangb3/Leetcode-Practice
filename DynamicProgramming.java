@@ -105,26 +105,30 @@ public class DynamicProgramming {
         return Math.max(list1.get(n-2), list2.get(n-1));
     }
     public String longestPalindrome(String s){
-        int[] dp = new int[s.length()];
-        for (int i = 0; i < dp.length; i++) {
-            int n = dp.length-1;
-            while(n>=i){
-                if(isPalindrome(s.substring(i, n+1))){
-                    dp[i] = n-i+1;
-                    break;
+        String curr = "";
+        int maxLength = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int left = i, right = i;
+            while(left>= 0 && right < s.length() && s.charAt(left) == s.charAt(right)){
+                if(right-left + 1 > maxLength){
+                    curr = s.substring(left, right+1);
+                    maxLength = right-left+1;
                 }
-                n--;
-            }   
-        }
-        int maxIndex = 0;
-        int max = Integer.MIN_VALUE;
-        for (int i = 0; i < dp.length; i++) {
-            if(dp[i] > max){
-                max = dp[i];
-                maxIndex = i;
+                left--;
+                right++;
+            }
+            left = i;
+            right = i+1;
+            while(left>=0 && right < s.length() && s.charAt(left) == s.charAt(right)){
+                if(right - left + 1 > maxLength){
+                    curr = s.substring(left, right+1);
+                    maxLength = right-left+1;
+                }
+                left --;
+                right++;
             }
         }
-        return s.substring(maxIndex, maxIndex + max);
+        return curr;
     }
    
     private boolean isPalindrome(String check){
@@ -166,10 +170,46 @@ public class DynamicProgramming {
         }
         return dp[n][m];
     }
-    
+    public int minDistance(String word1, String word2) {
+        int n = word1.length();
+        int m = word2.length();
+        int[][] dp = new int[n+1][m+1];
+        dp[n][m] = 0;
+        for(int i=0; i<= n; i++) dp[i][m] = n-i;
+        for(int j=0; j<=m; j++) dp[n][j] = m-j;
+
+        for (int i = n-1; i >= 0; i--) {
+            for (int j = m-1; j >= 0; j--) {
+                if(word1.charAt(i) == word2.charAt(j)) dp[i][j] = dp[i+1][j+1];
+                else{
+                    dp[i][j] = 1 + Math.min(Math.min(dp[i+1][j], dp[i][j+1]), dp[i+1][j+1]);
+                }
+            }
+        }
+        
+        return dp[0][0];
+    }
+    public int countSubstrings(String s){
+        int count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int left = i, right = i;
+            while(left >=0 && right < s.length() && s.charAt(left) == s.charAt(right)){
+                count++;
+                left--;
+                right++;
+            }
+            left = i;
+            right = i+1;
+            while(left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)){
+                count++;
+                left--;
+                right++;
+            }
+        }
+        return count;
+    }
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
-        System.out.println(dp.longestCommonSubsequence("abcde", "ace"));
-        //System.out.println(dp.isInterleave("aabcc","dbbca","aadbbcbcac")); 
+        System.out.println(dp.longestPalindrome("aaaa"));
     }
 }
