@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class DynamicProgramming {
@@ -208,8 +210,65 @@ public class DynamicProgramming {
         }
         return count;
     }
+    public int coinChange(int[] coins, int amount){
+        int numCoins = 0;
+        int[] dp = new int[amount+1];
+        dp[0] = 0;
+        for (int i = 1; i < dp.length; i++) {
+            dp[i] = Integer.MAX_VALUE-2;
+        }
+        for (int i = 1; i < dp.length; i++) {
+            for(int coin : coins){
+                if(i >= coin) {
+                    if(dp[i] > 1 + dp[i-coin]){
+                        dp[i] = 1 + dp[i-coin];
+                    }
+            }
+        }
+    }
+        return dp[amount] == Integer.MAX_VALUE-2 ? -1 : dp[amount];
+    }
+    public int maxProduct(int[] nums){
+        
+        int overallMax = nums[0];
+
+        int[] maxArray = new int[nums.length];
+        int[] minArray = new int[nums.length];
+        minArray[0] = nums[0];
+        maxArray[0] = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            int currentNum = nums[i];
+
+            int maxCandidate = currentNum * maxArray[i-1];
+            int minCandidate = currentNum * minArray[i-1];
+
+            maxArray[i] = Math.max(currentNum, Math.max(maxCandidate, minCandidate));
+            minArray[i] = Math.min(currentNum, Math.min(maxCandidate, minCandidate));
+
+            if(overallMax > maxArray[i]) overallMax = maxArray[i];
+        }
+        
+        return overallMax;
+    }
+    
+    public boolean wordBreak(String s, List<String> wordDict){
+        boolean[] track = new boolean[s.length()+1];
+        track[s.length()] = true;
+        for (int i = s.length()-1; i >= 0; i--) {
+            for(String word: wordDict){
+                if(i + word.length() <= s.length() && word.equals(s.substring(i, i+word.length()))){
+                    track[i] = track[i+word.length()];
+                }
+                if(track[i]) break;
+            }
+        }
+        return track[0];
+    }
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
-        System.out.println(dp.longestPalindrome("aaaa"));
+        //System.out.println(dp.wordBreak("aaaaaaa", Arrays.asList(new String[]{"aaaa", "aaa"})));
+        //System.out.println(dp.wordBreak("catsandog", Arrays.asList(new String[]{"cats", "and", "og"})));
+        System.out.println(dp.wordBreak("goalspecial", Arrays.asList(new String[]{"go","goal","goals","special"})));
     }
 }
