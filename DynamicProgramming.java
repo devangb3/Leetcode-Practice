@@ -251,24 +251,26 @@ public class DynamicProgramming {
         
         return overallMax;
     }
-    
-    public boolean wordBreak(String s, List<String> wordDict){
-        boolean[] track = new boolean[s.length()+1];
-        track[s.length()] = true;
-        for (int i = s.length()-1; i >= 0; i--) {
-            for(String word: wordDict){
-                if(i + word.length() <= s.length() && word.equals(s.substring(i, i+word.length()))){
-                    track[i] = track[i+word.length()];
-                }
-                if(track[i]) break;
+    public int uniquePaths(int m, int n){
+        int[][] graph = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            graph[i][0] = 1;
+        }
+        for (int j = 0; j < n; j++) {
+            graph[0][j] = 1;
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                graph[i][j] = graph[i-1][j] + graph[i][j-1];
             }
         }
-        return track[0];
+        return graph[m-1][n-1];
     }
+    
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
+        System.out.println(dp.uniquePaths(3, 2));
         //System.out.println(dp.wordBreak("aaaaaaa", Arrays.asList(new String[]{"aaaa", "aaa"})));
         //System.out.println(dp.wordBreak("catsandog", Arrays.asList(new String[]{"cats", "and", "og"})));
-        System.out.println(dp.wordBreak("goalspecial", Arrays.asList(new String[]{"go","goal","goals","special"})));
     }
 }
