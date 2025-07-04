@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -266,11 +267,36 @@ public class DynamicProgramming {
         }
         return graph[m-1][n-1];
     }
-    
+    public int change(int amount, int[] coins) {
+        int n = coins.length;
+        int[][] dp = new int[n][amount+1];
+        for (int i = 0; i < dp.length; i++) {
+            dp[i][0] = 1;
+        }
+        for (int j = 1; j < dp[0].length; j++) {
+            dp[n-1][j] = j >= coins[n-1] ? dp[n-1][j-coins[n-1]] : 0;
+        }
+        for (int i = n-2; i >= 0; i--) {
+            for (int j = 1; j < dp[0].length; j++) {
+                dp[i][j] = j - coins[i] >= 0? dp[i][j-coins[i]] + dp[i+1][j] : dp[i+1][j];
+            }
+        }
+        return dp[0][amount];
+    }
+    public int findTargetSumWays(int[] nums, int target){
+        return findTargetSumWaysRec(0, 0, target, nums);
+    }
+    private int findTargetSumWaysRec(int index, int currSum, int target, int[] nums){
+        if(index == nums.length){
+            return target == currSum ? 1 : 0;
+        }
+        return (
+            findTargetSumWaysRec(index+1, currSum+nums[index], target, nums) + 
+            findTargetSumWaysRec(index+1, currSum-nums[index], target, nums)
+        );
+    }
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
-        System.out.println(dp.uniquePaths(3, 2));
-        //System.out.println(dp.wordBreak("aaaaaaa", Arrays.asList(new String[]{"aaaa", "aaa"})));
-        //System.out.println(dp.wordBreak("catsandog", Arrays.asList(new String[]{"cats", "and", "og"})));
+        System.out.println(dp.findTargetSumWays( new int[]{1,1,1,1,1}, 3));
     }
 }

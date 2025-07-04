@@ -1,5 +1,7 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.PriorityQueue;
 
 public class DailyLeetcode {
@@ -51,7 +53,7 @@ public class DailyLeetcode {
         }
         return true;
     }
-    public int maxDifference(String s){
+    public int maxDifference(String s){ //O(N)
         HashMap<Character, Integer> map = new HashMap<>();
 
         for (int i = 0; i < s.length(); i++) {
@@ -72,8 +74,22 @@ public class DailyLeetcode {
         
         return maxOdd-minEven;
     }
+    public int maxDifferenceHard(String s, int k){
+        List<String> store = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {//O(N^3)
+            for (int j = i+k; j <= s.length(); j++) { 
+                store.add(s.substring(i, j));
+            }
+        }
+        int res = Integer.MIN_VALUE;
+        for (String sub : store) { //O(N^2)
+            res = Math.max(res, maxDifference(sub));
+        }
+        return res;
+    }
+    
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.maxDifference("mmsmsym"));
+        System.out.println(dc.maxDifferenceHard("1122211", 3));
     }
 }
