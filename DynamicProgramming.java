@@ -144,31 +144,22 @@ public class DynamicProgramming {
         }
         return true;
     }
-    public boolean isInterleave(String s1, String s2, String s3) {
-        int n = s1.length();
-        int m = s2.length();
-        if(s3.length() != n+m) return false;
-        boolean[][] dp = new boolean[n+1][m+1];
-
+    public boolean isInterleave(String s1, String s2, String s3){
+        if(s1.length() + s2.length() != s3.length()) return false;
+        int n = s1.length(), m = s2.length();
+        boolean[][] dp = new boolean[n + 1][m+1];
         dp[0][0] = true;
-        for (int i = 1; i <= n; i++) {
-            dp[i][0] = s3.charAt(i-1) == s1.charAt(i-1) && dp[i-1][0];
+        for (int i = 1; i < dp.length; i++) {
+            dp[i][0] = (s1.charAt(i-1) == s3.charAt(i-1) && dp[i-1][0]);
         }
-        for (int i = 1; i <= m; i++) {
-            dp[0][i] = s3.charAt(i-1) == s2.charAt(i-1) && dp[0][i-1];
+        for (int j = 1; j < dp[0].length; j++) {
+            dp[0][j] = (s2.charAt(j-1) == s3.charAt(j-1) && dp[0][j-1]);
         }
         for (int i = 1; i < dp.length; i++) {
             for (int j = 1; j < dp[0].length; j++) {
                 int k = i+j-1;
-                boolean possibleFromS1 = false;
-                if(s3.charAt(k) == s1.charAt(i-1) && dp[i-1][j]){
-                    possibleFromS1 = true;
-                }
-                boolean possibleFromS2 = false; 
-                if(s3.charAt(k) == s2.charAt(j-1) && dp[i][j-1]){
-                    possibleFromS2 = true;
-                } 
-                dp[i][j] = possibleFromS1 || possibleFromS2;
+                if(s3.charAt(k) == s1.charAt(i-1) && dp[i-1][j] || s3.charAt(k) == s2.charAt(j-1) && dp[i][j-1]) 
+                    dp[i][j] = true;
             }
         }
         return dp[n][m];
@@ -297,6 +288,6 @@ public class DynamicProgramming {
     }
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
-        System.out.println(dp.findTargetSumWays( new int[]{1,1,1,1,1}, 3));
+        System.out.println(dp.isInterleave("cat", "dog" , "cdoagt"));
     }
 }
