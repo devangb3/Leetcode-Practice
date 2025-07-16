@@ -286,8 +286,30 @@ public class DynamicProgramming {
             findTargetSumWaysRec(index+1, currSum-nums[index], target, nums)
         );
     }
+    public int longestIncreasingPath(int[][] matrix){
+        int n = matrix.length, m = matrix[0].length;
+        int[][] dp = new int[n][m];
+        int ans = 1;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                ans = Math.max(ans, longestIncreasingPathDFS(matrix, dp, i, j, n, m, Integer.MIN_VALUE));
+            }
+        }
+        return ans;
+    }
+    private int longestIncreasingPathDFS(int[][] matrix, int[][] dp, int i, int j, int rows, int cols, int prev){
+        if(i < 0 || i >= rows || j < 0 || j >= cols || prev >= matrix[i][j]) return 0;
+        if(dp[i][j] != 0) return dp[i][j];
+        int res = 1;
+        res = Math.max(res, 1 + longestIncreasingPathDFS(matrix, dp, i+1, j, rows, cols, matrix[i][j]));
+        res = Math.max(res, 1 + longestIncreasingPathDFS(matrix, dp, i-1, j, rows, cols, matrix[i][j]));
+        res = Math.max(res, 1 + longestIncreasingPathDFS(matrix, dp, i, j+1, rows, cols, matrix[i][j]));
+        res = Math.max(res, 1 + longestIncreasingPathDFS(matrix, dp, i, j-1, rows, cols, matrix[i][j]));
+        dp[i][j]= res;
+        return res;
+    }
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
-        System.out.println(dp.isInterleave("cat", "dog" , "cdoagt"));
+        System.out.println(dp.longestIncreasingPath(new int[][]{{9,9,4},{6,6,8},{2,1,1}}));
     }
 }
