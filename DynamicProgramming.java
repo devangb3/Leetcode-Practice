@@ -3,6 +3,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class DynamicProgramming {
     public int climbStairs(int n){
@@ -168,19 +170,19 @@ public class DynamicProgramming {
         int n = word1.length();
         int m = word2.length();
         int[][] dp = new int[n+1][m+1];
-        dp[n][m] = 0;
-        for(int i=0; i<= n; i++) dp[i][m] = n-i;
-        for(int j=0; j<=m; j++) dp[n][j] = m-j;
+        for(int i = 0; i<dp.length; i++){
+            dp[n-i][m] = i;
+        }
+        for(int j=0; j<dp[0].length; j++){
+            dp[n][m-j] = j;
+        }
 
         for (int i = n-1; i >= 0; i--) {
             for (int j = m-1; j >= 0; j--) {
                 if(word1.charAt(i) == word2.charAt(j)) dp[i][j] = dp[i+1][j+1];
-                else{
-                    dp[i][j] = 1 + Math.min(Math.min(dp[i+1][j], dp[i][j+1]), dp[i+1][j+1]);
-                }
+                else dp[i][j] = 1 + Math.min(dp[i+1][j+1], Math.min(dp[i][j+1], dp[i+1][j]));
             }
         }
-        
         return dp[0][0];
     }
     public int countSubstrings(String s){
@@ -308,8 +310,31 @@ public class DynamicProgramming {
         dp[i][j]= res;
         return res;
     }
+    public int maxCoins(int[] nums){
+        List<Integer> numsList = new ArrayList<>();
+        numsList.add(1);
+        for(int num : nums) numsList.add(num);
+        numsList.add(1);
+
+        int[][] dp = new int[numsList.size()][numsList.size()];
+        for(int[] row : dp) Arrays.fill(row, -1);
+
+        return maxCoinsRec(numsList, 1, numsList.size()-2, dp);
+    }
+    private int maxCoinsRec(List<Integer> numsList, int left, int right, int[][] dp){
+        if(left > right) return 0;
+        if(dp[left][right] != -1) return dp[left][right];
+        
+        for (int i = left; i <= right; i++) {
+            int coins = numsList.get(left-1) * numsList.get(i) * numsList.get(right+1);
+            coins += maxCoinsRec(numsList, left, i-1, dp) + maxCoinsRec(numsList,i+1, right, dp);
+            dp[left][right] = Math.max(dp[left][right], coins);
+        }
+
+        return dp[left][right];
+    }
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
-        System.out.println(dp.longestIncreasingPath(new int[][]{{9,9,4},{6,6,8},{2,1,1}}));
+        System.out.println(dp.maxCoins(new int[]{3,1,5,8}));
     }
 }
