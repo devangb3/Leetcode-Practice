@@ -333,8 +333,39 @@ public class DynamicProgramming {
 
         return dp[left][right];
     }
+    public boolean isMatch(String s, String p) {
+        int n = s.length();
+        int m = p.length();
+
+        int[][] dp = new int[n+1][m+1];
+
+        for(int[] row : dp) Arrays.fill(row, -1);
+
+        return isMatchRec(s, p, dp, 0, 0);
+    }
+
+    private boolean isMatchRec(String s, String p, int[][] dp, int i, int j){
+        
+        if(dp[i][j] != -1) return dp[i][j] == 1; //1 is true and 0 is false
+        
+        boolean ans;
+        if(j == p.length()) ans = i==s.length();
+        else{
+            boolean match = i<s.length() && (s.charAt(i) == p.charAt(j) || p.charAt(j) == '.');
+
+            if(j+1 < p.length() && p.charAt(j+1) == '*'){
+                ans = isMatchRec(s, p, dp, i, j+2) || (match && isMatchRec(s, p, dp, i+1, j));
+            }
+            else{
+                ans = match && isMatchRec(s, p, dp, i+1, j+1);
+            }
+        }
+
+        dp[i][j] = ans ? 1 : 0;
+        return ans;
+    }
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
-        System.out.println(dp.maxCoins(new int[]{3,1,5,8}));
+        System.out.println(dp.isMatch("aa", "a*"));
     }
 }
