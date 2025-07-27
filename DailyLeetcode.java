@@ -87,9 +87,30 @@ public class DailyLeetcode {
         }
         return res;
     }
+
+    public int countHillValley(int[] nums){
+        int hillsValleysCount = 0;
+        int fromLeft = nums[0];
+        int fromRight = nums[nums.length-1];
+        int i = 1;
+        while(i < nums.length-1) {
+            int j = i+1;
+            int curr = nums[i];
+            while(j < nums.length && nums[j] == curr) j++;
+            if(j != nums.length){
+                fromRight = nums[j];
+                if(curr > fromLeft && curr >fromRight) hillsValleysCount++;
+                else if(curr < fromLeft && curr < fromRight) hillsValleysCount++;
+                fromLeft = curr;
+                i = j;
+            }
+            else break;
+        }
+        return hillsValleysCount;
+    }
     
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.maxDifferenceHard("1122211", 3));
+        System.out.println(dc.countHillValley(new int[]{6,6,5,5,4,1}));
     }
 }
