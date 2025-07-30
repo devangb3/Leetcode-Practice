@@ -108,9 +108,44 @@ public class DailyLeetcode {
         }
         return hillsValleysCount;
     }
-    
+    public String vennString(String a, String b){
+        String ans = "";
+        HashMap<String, Integer> map1 = new HashMap<>();
+        HashMap<String, Integer> map2 = new HashMap<>();
+
+        String[] wordsA = a.trim().split(" ");
+        for(String word : wordsA){
+            if(!word.isEmpty()){
+                map1.put(word, map1.getOrDefault(word, 0)+1);
+            }
+        }
+
+        String[] wordsB = b.trim().split(" ");
+        for(String word : wordsB){
+            if(!word.isEmpty()){
+                map2.put(word, map2.getOrDefault(word, 0)+1);
+            }
+        }
+        
+        PriorityQueue<String> queue = new PriorityQueue<>();
+        for(String s : map1.keySet()){
+            if(map2.containsKey(s)){
+                int commonCount = Math.min(map1.get(s), map2.get(s));
+                for (int i = 0; i < commonCount; i++) {
+                    queue.add(s);
+                }
+            }
+        }
+        while(!queue.isEmpty()){
+            ans += queue.poll();
+            if(!queue.isEmpty()) ans += " ";
+        }
+        return ans;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.countHillValley(new int[]{6,6,5,5,4,1}));
+        String a = "1 2 7 5 2 5";
+        String b = "ab a 3 2 7 1"; // ans is 1 2 7
+        System.out.println(dc.vennString(a, b));
     }
 }
