@@ -33,11 +33,33 @@ public class Greedy {
        return numberOfSteps;
     }
 
+    public int canCompleteCircuit(int[] gas, int[] cost){
+        int[] effect = new int[gas.length];
+        int total = 0;
+        for (int i = 0; i < effect.length; i++) {
+            effect[i] = gas[i] - cost[i];
+            total += effect[i];
+        }
+        if(total < 0) return -1;
+        
+        int newTotal = 0;
+        int beginIndex = 0;
+        int index = 0;
+        while(index < effect.length){
+            if(newTotal<0){
+                newTotal = 0;
+                beginIndex = index;
+            }
+            newTotal += effect[index];
+            index++;
+        }
+        return beginIndex;
+    }
     
     public static void main(String[] args) {
         Greedy g = new Greedy();
         
-        System.out.println(g.jump(new int[]{2,3,1,1,4}));
+        System.out.println(g.canCompleteCircuit(new int[]{5,1,2,3,4}, new int[]{4,4,1,5,1}));
         
     }
 }
