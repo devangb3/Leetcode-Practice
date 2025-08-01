@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -142,10 +143,29 @@ public class DailyLeetcode {
         }
         return ans;
     }
+    
+    public List<List<Integer>> generatePascalTriangle(int numRows){
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> list1 = new ArrayList<>();
+        list1.add(1);
+        ans.add(list1);
+        if(numRows == 1) return ans;
+        ans.add(Arrays.asList(1,1));
+        if(numRows == 2) return ans;
+        for (int i = 3; i <= numRows; i++) {
+            List<Integer> prevList = ans.get(ans.size()-1);
+            List<Integer> newList = new ArrayList<>();
+            for (int j = 1; j < i-1; j++) {
+                newList.add(prevList.get(j-1) + prevList.get(j));
+            }
+            newList.addFirst(1);
+            newList.addLast(1);
+            ans.add(newList);
+        }
+        return ans;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        String a = "1 2 7 5 2 5";
-        String b = "ab a 3 2 7 1"; // ans is 1 2 7
-        System.out.println(dc.vennString(a, b));
+        System.out.println(dc.generatePascalTriangle(6));
     }
 }
