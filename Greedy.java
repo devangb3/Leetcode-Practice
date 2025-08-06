@@ -1,3 +1,7 @@
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.PriorityQueue;
+
 public class Greedy {
     public int maxSubArray(int[] nums) {
         int sum = nums[0];
@@ -56,10 +60,43 @@ public class Greedy {
         return beginIndex;
     }
     
+    public boolean isNStraightHand(int[] hand, int groupSize){
+        if(hand.length % groupSize != 0) return false;
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int card : hand){
+            if(!map.containsKey(card)) queue.add(card);
+            map.put(card, map.getOrDefault(card, 0) + 1);
+        }
+        int prev = queue.peek();
+        
+        while(!queue.isEmpty()){
+            map.put(prev, map.get(prev)-1);
+            if(map.get(prev) == 0) {
+                map.remove(prev);
+                if(prev !=queue.poll()) return false;
+            }
+            for (int i = 0; i < groupSize-1; i++) {
+                if(map.containsKey(prev+1)){
+                    map.put(prev+1, map.get(prev+1)-1);
+                    if(map.get(prev+1) == 0){
+                        map.remove(prev+1);
+                        if(prev+1 != queue.poll()) return false;
+                    }  
+                    prev++;
+                }
+                else{
+                    return false;
+                } 
+            }
+            if(!queue.isEmpty()) prev = queue.peek();
+        }
+        return true;
+    }
     public static void main(String[] args) {
         Greedy g = new Greedy();
         
-        System.out.println(g.canCompleteCircuit(new int[]{5,1,2,3,4}, new int[]{4,4,1,5,1}));
+        System.out.println(g.isNStraightHand(new int[]{3,4,7,4,6,3,6,5,2,8}, 2));
         
     }
 }
