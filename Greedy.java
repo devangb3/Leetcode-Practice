@@ -95,7 +95,7 @@ public class Greedy {
     }
     
     public boolean mergeTriplets(int[][] triplets, int[] target){
-        int[] source = triplets[0];
+        int[] source = new int[]{0,0,0};
         for (int i = 1; i < triplets.length; i++) {
             int[] current = triplets[i];
             boolean canOperate = true;
