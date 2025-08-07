@@ -93,10 +93,27 @@ public class Greedy {
         }
         return true;
     }
+    
+    public boolean mergeTriplets(int[][] triplets, int[] target){
+        int[] source = triplets[0];
+        for (int i = 1; i < triplets.length; i++) {
+            int[] current = triplets[i];
+            boolean canOperate = true;
+            for (int j = 0; j < 3; j++) {
+             if(source[j] > target[j] || current[j] > target[j]) canOperate = false;  
+            }
+            if(canOperate){
+                source[0] = Math.max(source[0], current[0]);
+                source[1] = Math.max(source[1], current[1]);
+                source[2] = Math.max(source[2], current[2]);
+            }
+        }
+        return Arrays.compare(source, target) == 0;
+    }
     public static void main(String[] args) {
         Greedy g = new Greedy();
         
-        System.out.println(g.isNStraightHand(new int[]{3,4,7,4,6,3,6,5,2,8}, 2));
+        System.out.println(g.mergeTriplets(new int[][]{{2,5,3}, {1,8,4}, {1,7,5}}, new int[]{2,7,5}));
         
     }
 }
