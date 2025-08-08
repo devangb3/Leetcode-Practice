@@ -1,5 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.PriorityQueue;
 
 public class Greedy {
@@ -110,10 +112,31 @@ public class Greedy {
         }
         return Arrays.compare(source, target) == 0;
     }
+    
+    public List<Integer> paritionLabels(String s){
+        List<Integer> ans = new ArrayList<>();
+        HashMap<Character, Integer> lastOccurrenceMap = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            lastOccurrenceMap.put(s.charAt(i), i);
+        }
+        int index = 0;
+        
+        while(index < s.length()){
+            int currentSize = 0;
+            int last = lastOccurrenceMap.get(s.charAt(index));
+            while(index <= last){
+                if(lastOccurrenceMap.get(s.charAt(index)) > last) last = lastOccurrenceMap.get(s.charAt(index));
+                index++;
+                currentSize++;
+            }
+            ans.add(currentSize);
+        }
+        return ans;
+    }
     public static void main(String[] args) {
         Greedy g = new Greedy();
         
-        System.out.println(g.mergeTriplets(new int[][]{{2,5,3}, {1,8,4}, {1,7,5}}, new int[]{2,7,5}));
+        System.out.println(g.paritionLabels("eccbbbbdec"));
         
     }
 }
