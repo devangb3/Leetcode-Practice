@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Stack;
 
 public class Greedy {
     public int maxSubArray(int[] nums) {
@@ -133,10 +134,32 @@ public class Greedy {
         }
         return ans;
     }
+    
+    public boolean checkValidString(String s) {
+        int minLeft = 0, maxLeft = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) == '*') {
+                minLeft--;
+                maxLeft++;
+            }
+            else if(s.charAt(i) == '('){
+                minLeft++;
+                maxLeft++;
+            } 
+            else {
+                minLeft--;
+                maxLeft--;
+            }
+            if(maxLeft < 0) return false;
+            if(minLeft < 0) minLeft = 0;
+        }
+        
+        return maxLeft == 0 || minLeft == 0;
+    }
     public static void main(String[] args) {
         Greedy g = new Greedy();
         
-        System.out.println(g.paritionLabels("eccbbbbdec"));
+        System.out.println(g.checkValidString("(((((*(()((((*((**(((()()*)()()()*((((**)())*)*)))))))(())(()))())((*()()(((()((()*(())*(()**)()(())"));
         
     }
 }
