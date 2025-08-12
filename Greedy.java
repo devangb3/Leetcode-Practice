@@ -156,10 +156,25 @@ public class Greedy {
         
         return maxLeft == 0 || minLeft == 0;
     }
+
+    public int eraseOverlapIntervals(int[][] intervals){
+        int count = 0;
+        Arrays.sort(intervals, (a,b) -> Integer.compare(a[0], b[0]));
+        int endValue = intervals[0][1];
+        
+        for (int i = 1; i < intervals.length; i++) {
+            if(intervals[i][0] < endValue){
+                endValue = Math.min(intervals[i][1], endValue);
+                count++;
+            }
+            else endValue = intervals[i][1];
+        }
+        return count;
+    }
     public static void main(String[] args) {
         Greedy g = new Greedy();
         
-        System.out.println(g.checkValidString("(((((*(()((((*((**(((()()*)()()()*((((**)())*)*)))))))(())(()))())((*()()(((()((()*(())*(()**)()(())"));
+        System.out.println(g.eraseOverlapIntervals(new int[][]{{1,2}, {2,3}, {3,4}, {1,3}}));
         
     }
 }
