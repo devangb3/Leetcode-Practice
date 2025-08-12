@@ -44,6 +44,19 @@ public class IntervalsPractice {
         res.add(curr);
         return res.toArray(new int[res.size()][]);
     }
+    public int eraseOverlapIntervals(int[][] intervals){
+        int count = 0;
+        Arrays.sort(intervals, (a,b) -> Integer.compare(a[0], b[0]));
+        int endValue = intervals[0][1];
+        
+        for (int i = 1; i < intervals.length; i++) {
+            if(intervals[i][0] < endValue){
+                endValue = Math.min(intervals[i][1], endValue);
+                count++;
+            }
+        }
+        return count;
+    }
     public static void main(String[] args) {
         IntervalsPractice ip = new IntervalsPractice();
         int[][] res = ip.merge(new int[][]{{2,3},{4,5},{6,7},{8,9},{1,10}});
