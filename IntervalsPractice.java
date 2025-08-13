@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 public class IntervalsPractice {
@@ -57,9 +59,56 @@ public class IntervalsPractice {
         }
         return count;
     }
+     public class Interval {
+        public int start, end;
+        public Interval(int start, int end){
+            this.start = start;
+            this.end = end;
+        }
+        public int getStart(){
+            return this.start;
+        }
+    }
+    public boolean canAttendMeetings(List<Interval> intervals) {
+        if(intervals.isEmpty()) return true;
+        intervals.sort(Comparator.comparingInt(interval -> interval.start));
+        int last = intervals.get(0).start;
+        for (int i = 1; i < intervals.size(); i++) {
+            if(intervals.get(i).start < last) return false;
+            last = intervals.get(i).end;
+        }
+        return true;
+    }
+    public int minMeetingRooms(List<Interval> intervals){
+        if(intervals.isEmpty()) return 0;
+        int maxCount = 0, count = 0;
+        int[] start = new int[intervals.size()];
+        int[] end = new int[intervals.size()];
+        for (int i = 0; i < intervals.size(); i++) {
+            start[i] = intervals.get(i).start;
+            end[i] = intervals.get(i).end;
+        }
+        Arrays.sort(start);
+        Arrays.sort(end);
+
+        int i =0, j=0;
+        while(i < start.length && j<end.length){
+            if(start[i] < end[j]){
+                count++;
+                i++;
+            }
+            else{
+                count--;
+                j++;
+            }
+            maxCount = Math.max(count, maxCount);
+        }
+        return maxCount;
+    }
+    
     public static void main(String[] args) {
         IntervalsPractice ip = new IntervalsPractice();
-        int[][] res = ip.merge(new int[][]{{2,3},{4,5},{6,7},{8,9},{1,10}});
-        for(int[] num : res) System.out.println(Arrays.toString(num));
+        List<Interval> intervals = new ArrayList<>(Arrays.asList(ip.new Interval(0, 40), ip.new Interval(5, 10), ip.new Interval(15, 20), ip.new Interval(45, 50)));
+        System.out.println(ip.minMeetingRooms(intervals));
     }
 }
