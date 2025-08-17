@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class MathGeometry {
@@ -51,8 +52,33 @@ public class MathGeometry {
         }
         return ans;
     }
+    
+    public void setZeroes(int[][] matrix){
+        int rows = matrix.length, cols = matrix[0].length;
+        HashSet<Integer> rowsToBeCleared = new HashSet<>();
+        HashSet<Integer> colsToBeCleared = new HashSet<>();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if(matrix[i][j] == 0){
+                    rowsToBeCleared.add(i);
+                    colsToBeCleared.add(j);
+                }
+            }
+        }
+        for(int row : rowsToBeCleared){
+            for (int i = 0; i < cols; i++) {
+                matrix[row][i] = 0;
+            }
+        }
+        for(int col : colsToBeCleared){
+            for (int i = 0; i < rows; i++) {
+                matrix[i][col] = 0;
+            }
+        }
+        for(int[] row : matrix) System.out.println(Arrays.toString(row));
+    }
     public static void main(String[] args) {
         MathGeometry mg = new MathGeometry();
-        System.out.println(mg.spiralOrder(new int[][]{{1,2,3}}));
+        mg.setZeroes(new int[][]{{1,1,1}, {1,0,1}, {1,1,1}});
     }
 }
