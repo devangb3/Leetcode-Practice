@@ -92,8 +92,21 @@ public class MathGeometry {
         }
         return false;
     }
+    public int[] plusOne(int[] digits){
+        int length = digits.length;
+        for (int i = length-1; i >= 0; i--) {
+            if(digits[i] != 9)   {
+                digits[i]++;
+                return digits;
+            }
+            digits[i] = 0;
+        }
+        int[] ans = new int[length+1];
+        ans[0] = 1;
+        return ans;
+    }
     public static void main(String[] args) {
         MathGeometry mg = new MathGeometry();
-        System.out.println(mg.isHappy(78));
+        System.out.println(Arrays.toString(mg.plusOne(new int[]{9,1})));
     }
 }
