@@ -77,8 +77,23 @@ public class MathGeometry {
         }
         for(int[] row : matrix) System.out.println(Arrays.toString(row));
     }
+    public boolean isHappy(int n){
+        HashSet<Integer> set = new HashSet<>();
+        while(!set.contains(n)){
+            set.add(n);
+            if(n == 1) return true;
+            int ogNum = n;
+            n = 0;
+            while(ogNum > 0){
+                int digit = ogNum%10;
+                ogNum = ogNum/10;
+                n += digit * digit;
+            }
+        }
+        return false;
+    }
     public static void main(String[] args) {
         MathGeometry mg = new MathGeometry();
-        mg.setZeroes(new int[][]{{1,1,1}, {1,0,1}, {1,1,1}});
+        System.out.println(mg.isHappy(78));
     }
 }
