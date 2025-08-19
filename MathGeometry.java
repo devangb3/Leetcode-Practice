@@ -106,24 +106,15 @@ public class MathGeometry {
         return ans;
     }
     public double myPow(double x, int n){
-        if(n==0 || x==1.0) return 1.000;
-        if(n == Integer.MIN_VALUE){
-            if(x == -1) return 1.0;
-            else return 0.0;
-        }
-        if(n == Integer.MAX_VALUE){
-            if(x == -1) return -1;
-            else if(x == 1) return 1;
-        }
-        if(n < 0){
-            x = 1/x;
-            n = -1 * n;
-        } 
-        double ans = x;
-        for (int i = 1; i < n; i++) {
-            ans *= x;
-        }
-        return ans-0.000000000000001;
+        double ans = myPowRec(x, Math.abs(n));
+        return n<0 ? 1/ans : ans;
+    }
+    private double myPowRec(double x, int n){
+        if(n==0) return 1;
+        if(x==0) return 0;
+        double res = myPowRec(x, n/2);
+        res = res * res;
+        return n%2==0 ? res : res*x;
     }
     
     public static void main(String[] args) {
