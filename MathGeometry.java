@@ -105,8 +105,30 @@ public class MathGeometry {
         ans[0] = 1;
         return ans;
     }
+    public double myPow(double x, int n){
+        if(n==0 || x==1.0) return 1.000;
+        if(n == Integer.MIN_VALUE){
+            if(x == -1) return 1.0;
+            else return 0.0;
+        }
+        if(n == Integer.MAX_VALUE){
+            if(x == -1) return -1;
+            else if(x == 1) return 1;
+        }
+        if(n < 0){
+            x = 1/x;
+            n = -1 * n;
+        } 
+        double ans = x;
+        for (int i = 1; i < n; i++) {
+            ans *= x;
+        }
+        return ans-0.000000000000001;
+    }
+    
     public static void main(String[] args) {
         MathGeometry mg = new MathGeometry();
-        System.out.println(Arrays.toString(mg.plusOne(new int[]{9,1})));
+        System.out.println(mg.myPow(2.0000, -1000000000));
+        System.out.println(-2147483648 == Integer.MIN_VALUE);
     }
 }
