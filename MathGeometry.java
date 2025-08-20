@@ -116,10 +116,42 @@ public class MathGeometry {
         res = res * res;
         return n%2==0 ? res : res*x;
     }
-    
+    public String multiply(String num1 , String num2){
+        if(num1.length() > num2.length()){
+            int diff = num1.length()-num2.length();
+            for (int i = 0; i < diff; i++) {
+                num2 = '0' + num2;
+            }
+        }
+        else if(num2.length() > num1.length()){
+            int diff = num2.length()-num1.length();
+            for (int i = 0; i < diff; i++) {
+                num1 = '0' + num1;
+            }
+        }
+        int[] multList = new int[num1.length() + num2.length()];
+        for (int i = num1.length()-1; i >= 0; i--) {
+            for (int j = num2.length()-1; j >= 0; j--) {
+                int number1 = num1.charAt(i) - 48, number2 = num2.charAt(j)-48;
+                int mult = number1 * number2;
+                int val = mult + multList[i+j+1];
+                multList[i+j] = multList[i+j] + val/10;
+                multList[i+j+1] = val%10;
+            }
+        }
+        StringBuilder ans = new StringBuilder();
+        int index = 0;
+        
+        while(index<multList.length){
+            if(multList[index] != 0)
+                ans.append(multList[index]);
+            index++;
+        }
+        return ans.isEmpty() ? "0" : ans.toString();
+    }
     public static void main(String[] args) {
         MathGeometry mg = new MathGeometry();
-        System.out.println(mg.myPow(2.0000, -1000000000));
-        System.out.println(-2147483648 == Integer.MIN_VALUE);
+        System.out.println(mg.multiply("0", "0"));
+        
     }
 }
