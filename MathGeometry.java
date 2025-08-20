@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 
 public class MathGeometry {
     public void rotate(int[][] matrix){
@@ -149,9 +153,40 @@ public class MathGeometry {
         }
         return ans.isEmpty() ? "0" : ans.toString();
     }
+    class DetectSquares {
+    HashMap<List<Integer>, Integer> map;
+    public DetectSquares() {
+        map = new HashMap<>();
+    }
+    
+    public void add(int[] point) {
+        List<Integer> key = Arrays.stream(point).boxed().toList();
+        map.put(key, map.getOrDefault(key, 0)+1);
+    }
+    
+    public int count(int[] point) {
+        int count =0;
+        for(List<Integer> key : map.keySet()){
+            
+            if(point[0] != key.get(0) && point[1] != key.get(1) && Math.abs(point[0] - key.get(0)) == Math.abs(point[1] - key.get(1))){
+                List<Integer> key2 = new ArrayList<>(Arrays.asList(point[0], key.get(1))), key3 = new ArrayList<>(Arrays.asList(key.get(0), point[1]));
+                if(map.containsKey(key2) && map.containsKey(key3)){
+                    count+= map.get(key3) * map.get(key2) * map.get(key);
+                }
+            }
+        }
+        return count;
+    }
+}
+
     public static void main(String[] args) {
         MathGeometry mg = new MathGeometry();
-        System.out.println(mg.multiply("0", "0"));
+        HashMap<List<Integer>, Integer> map = new HashMap<>();
+        int[] point = new int[]{1,2};
+        
+        List<Integer> key = Arrays.stream(point).boxed().toList();
+        map.put(key, 1);
+        
         
     }
 }
