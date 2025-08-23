@@ -40,8 +40,16 @@ public class BitManipulation {
         }
         return ans;
     }
+    public int missingNumber(int[] nums){
+        int res = 0;
+        for (int i = 0; i <= nums.length; i++) {
+            res ^= i;
+        }
+        for(int num : nums) res ^= num;
+        return res;
+    }
     public static void main(String[] args) {
         BitManipulation bm = new BitManipulation();
-        System.out.println(bm.reverseBits(43261596));
+        System.out.println(bm.missingNumber(new int[]{0,1,2}));
     }
 }
