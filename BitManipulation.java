@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class BitManipulation {
     public int singleNumber(int[] nums){
@@ -56,8 +59,23 @@ public class BitManipulation {
         }
         return a;
     }
+    public int reverse(int x){
+        int ans = 0;
+        while(x != 0){
+            if(ans > Integer.MAX_VALUE/10 || ans < Integer.MIN_VALUE/10) return 0;         
+            ans *= 10;
+            ans += x%10;
+            x/=10;
+        }
+        HashMap<String, Long[]> map = new HashMap<>();
+        
+        return ans;
+    }
     public static void main(String[] args) {
         BitManipulation bm = new BitManipulation();
-        System.out.println(bm.getSum(3, 2));
+        List<Long> nums = Arrays.asList(1L, 2L);
+        long check = 2;
+        nums.add(check);
+        System.out.println(nums.get(1));
     }
 }
