@@ -48,8 +48,16 @@ public class BitManipulation {
         for(int num : nums) res ^= num;
         return res;
     }
+    public int getSum(int a, int b){
+        while(b!=0){
+            int temp = (a&b) <<1;
+            a = a^b;
+            b = temp;
+        }
+        return a;
+    }
     public static void main(String[] args) {
         BitManipulation bm = new BitManipulation();
-        System.out.println(bm.missingNumber(new int[]{0,1,2}));
+        System.out.println(bm.getSum(3, 2));
     }
 }
