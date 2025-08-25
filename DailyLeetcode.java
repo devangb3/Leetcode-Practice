@@ -88,7 +88,6 @@ public class DailyLeetcode {
         }
         return res;
     }
-
     public int countHillValley(int[] nums){
         int hillsValleysCount = 0;
         int fromLeft = nums[0];
@@ -143,7 +142,6 @@ public class DailyLeetcode {
         }
         return ans;
     }
-    
     public List<List<Integer>> generatePascalTriangle(int numRows){
         List<List<Integer>> ans = new ArrayList<>();
         List<Integer> list1 = new ArrayList<>();
@@ -164,8 +162,35 @@ public class DailyLeetcode {
         }
         return ans;
     }
+    public int[] findDiagonalOrder(int[][] mat) {
+        int m = mat.length, n = mat[0].length;
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if(map.containsKey(i+j)){
+                    List<Integer> temp = map.get(i+j);
+                    temp.add(mat[i][j]);
+                    map.put(i+j, temp);
+                }
+                else map.put(i+j, new ArrayList<>(Arrays.asList(mat[i][j])));
+            }
+        }
+        int[] keyList = map.keySet().stream().mapToInt(x->x).toArray();
+        Arrays.sort(keyList);
+        for(Integer key : map.keySet()){
+            if(key % 2 == 0){
+                res.addAll(map.get(key).reversed());
+            }
+            else{
+                res.addAll(map.get(key));
+            }
+        }
+        return res.stream().mapToInt(x->x).toArray();
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.generatePascalTriangle(6));
+        int[][] matrix = new int[][]{{1,2,3}, {4,5,6}, {7,8,9}};
+        System.out.println(Arrays.toString(dc.findDiagonalOrder(matrix)));
     }
 }
