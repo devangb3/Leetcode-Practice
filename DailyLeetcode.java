@@ -188,9 +188,37 @@ public class DailyLeetcode {
         }
         return res.stream().mapToInt(x->x).toArray();
     }
+    public long maxSum(List<Integer> nums, int m, int k){
+        long sum = 0;
+        int left = 0, right = left+k-1;
+
+        long tempSum = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = left; i <= right; i++) {
+                tempSum += nums.get(i);
+                map.put(nums.get(i), map.getOrDefault(nums.get(i), 0)+1);
+            }
+        while(right< nums.size()){
+            if(map.size() >= m){
+                sum = Math.max(sum, tempSum);
+            }
+            tempSum -= nums.get(left);
+            int leftCount = map.get(nums.get(left))-1;
+            if(leftCount == 0) map.remove(nums.get(left));
+            else map.put(nums.get(left), leftCount);
+            left++;
+            right++;
+            if(right>= nums.size()) break;
+            tempSum += nums.get(right);
+            map.put(nums.get(right), map.getOrDefault(nums.get(right), 0)+1);
+        }
+        return sum;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        int[][] matrix = new int[][]{{1,2,3}, {4,5,6}, {7,8,9}};
-        System.out.println(Arrays.toString(dc.findDiagonalOrder(matrix)));
+        System.out.println(dc.maxSum(new ArrayList<>(List.of(1,2,1,2,1,2,1)), 3, 3));
+        System.out.println(dc.maxSum(new ArrayList<>(List.of(2,6,7,3,1,7)), 3, 4));
+        System.out.println(dc.maxSum(new ArrayList<>(List.of(1)), 1, 1));
+        System.out.println(dc.maxSum(new ArrayList<>(List.of(1,1,2)), 1, 1));
     }
 }
