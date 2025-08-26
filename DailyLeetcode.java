@@ -214,11 +214,24 @@ public class DailyLeetcode {
         }
         return sum;
     }
+    public int areaOfMaxdiagonal(int[][] dimensions){
+        int maxArea = 0;
+        double maxDiagonal = 0;
+        for(int[] dimension : dimensions){
+            double diagonal = Math.sqrt(dimension[0] * dimension[0] + dimension[1]*dimension[1]);
+            int area = dimension[0]*dimension[1];
+            if(diagonal == maxDiagonal) maxArea = Math.max(area, maxArea);
+            else if(diagonal > maxDiagonal){
+                maxArea = area;
+                maxDiagonal = diagonal;
+            }
+        }
+        return maxArea;
+    }
+    
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.maxSum(new ArrayList<>(List.of(1,2,1,2,1,2,1)), 3, 3));
-        System.out.println(dc.maxSum(new ArrayList<>(List.of(2,6,7,3,1,7)), 3, 4));
-        System.out.println(dc.maxSum(new ArrayList<>(List.of(1)), 1, 1));
-        System.out.println(dc.maxSum(new ArrayList<>(List.of(1,1,2)), 1, 1));
+        int[][] dimensions = new int[][]{{39,52},{16,63},{33,56}};
+        System.out.println(dc.areaOfMaxdiagonal(dimensions));
     }
 }
