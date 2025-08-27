@@ -228,10 +228,37 @@ public class DailyLeetcode {
         }
         return maxArea;
     }
-    
+    public long maximumProfit(int[] prices, int k){
+        long[][][] dp = new long[prices.length][k+1][3];
+        for(long[][] record : dp){
+            for(long[] row : record) Arrays.fill(row, -1);;
+        }
+        long profit = 0;
+        profit = maximumProfitRec(dp, prices, k, 0, 0);
+        return Math.max(0, profit);
+    }
+    private long maximumProfitRec(long[][][] dp, int[] prices, int remainingTransactions, int currentState, int i){
+        if(i == prices.length) return (currentState == 0) ? 0 : Integer.MIN_VALUE;
+        if(dp[i][remainingTransactions][currentState] != -1) return dp[i][remainingTransactions][currentState];
+        long profit = maximumProfitRec(dp, prices, remainingTransactions, currentState, i+1); //do nothing
+        if(currentState == 0){
+            if(remainingTransactions > 0){
+                profit = Math.max(profit, -prices[i] + maximumProfitRec(dp, prices, remainingTransactions, 1, i+1)); //buy
+                profit = Math.max(profit, prices[i] + maximumProfitRec(dp, prices, remainingTransactions, 2, i+1)); //sell
+            }
+        }
+        else if(currentState == 1){
+            profit = Math.max(profit, prices[i]+maximumProfitRec(dp, prices, remainingTransactions-1, 0, i+1));
+        }
+        else{
+            profit = Math.max(profit, -prices[i]+maximumProfitRec(dp, prices, remainingTransactions-1, 0, i+1));
+        }
+        dp[i][remainingTransactions][currentState] = profit;
+        return profit;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        int[][] dimensions = new int[][]{{39,52},{16,63},{33,56}};
-        System.out.println(dc.areaOfMaxdiagonal(dimensions));
+        
+        System.out.println(dc.maximumProfit(new int[]{12,16,19,19,8,1,19,13,9}, 3));
     }
 }
