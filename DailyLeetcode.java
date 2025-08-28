@@ -256,9 +256,37 @@ public class DailyLeetcode {
         dp[i][remainingTransactions][currentState] = profit;
         return profit;
     }
+    public int[][] sortMatrix(int[][] grid){
+        int n = grid.length;
+        
+        HashMap<Integer, PriorityQueue<Integer>> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int key = i-j;
+                if(!map.containsKey(key)){
+                    PriorityQueue<Integer> queue = key>=0 ? new PriorityQueue<>((a,b) -> b-a) : new PriorityQueue<>();
+                    queue.add(grid[i][j]);
+                    map.put(key, queue);
+                }
+                else{
+                    PriorityQueue<Integer> temp = map.get(key);
+                    temp.add(grid[i][j]);
+                    map.put(key, temp);
+                }
+            }
+        }
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                int val = map.get(i-j).poll();
+                grid[i][j] = val;
+            }
+        }
+        return grid;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        
-        System.out.println(dc.maximumProfit(new int[]{12,16,19,19,8,1,19,13,9}, 3));
+        int[][] grid = new int[][]{{1,7,3},{9,8,2},{4,5,6}};
+        int[][] ans = dc.sortMatrix(grid);
+        for(int[] row : ans) System.out.println(Arrays.toString(row));
     }
 }
