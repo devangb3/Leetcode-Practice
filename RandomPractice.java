@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,13 +28,32 @@ public class RandomPractice {
         }
         return true;
     }
-    private int getInteger(Character c){
-        return c -'1';
+    public int numberOfPairs(int[][] points) {
+        int count  = 0;
+        for (int i = 0; i < points.length; i++) {
+            int ax = points[i][0], ay = points[i][1];
+            for (int j = 0; j < points.length; j++) {
+                if(points[i] == points[j]) continue;
+                int bx = points[j][0], by = points[j][1];
+                if(!(ax <= bx && ay >= by)) continue;
+                boolean skip = false;
+                for (int k = 0; k < points.length; k++) {
+                    if(points[k] == points[i] || points[k] == points[j]) continue;
+                    int cx = points[k][0], cy = points[k][1];
+                    if((cx >= ax && cx <= bx) && (cy <= ay && cy >= by)){
+                        skip = true;
+                        break;
+                    }
+                }
+                if(!skip) count++;
+            }
+        }
+        return count;
     }
     public static void main(String[] args) {
         RandomPractice rp = new RandomPractice();
-        char a = '1';
-        int num = a-48;
-        System.out.println(num);        
+        int[][] graph = new int[][]{{3,1},{1,3},{1,1}}; // -> {3,1} , {1,1}, {1,3}
+        System.out.println(rp.numberOfPairs(graph));
     }
 }
+ 
