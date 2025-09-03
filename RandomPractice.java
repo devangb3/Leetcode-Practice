@@ -50,10 +50,27 @@ public class RandomPractice {
         }
         return count;
     }
+    public int[] distributeCandies(int candies, int num_people) {
+        int[] ans = new int[num_people];
+        int temp = 1;
+        while(candies > 0){
+            for (int i = 0; i < ans.length; i++) {
+                if(candies >= temp){
+                    ans[i] += temp;
+                    candies -= temp;
+                    temp++;
+                }
+                else{
+                    ans[i] += candies;
+                    candies = 0;
+                }
+            }
+        }
+        return ans;
+    }
     public static void main(String[] args) {
         RandomPractice rp = new RandomPractice();
-        int[][] graph = new int[][]{{3,1},{1,3},{1,1}}; // -> {3,1} , {1,1}, {1,3}
-        System.out.println(rp.numberOfPairs(graph));
+        System.out.println(Arrays.toString(rp.distributeCandies(7, 4)));
     }
 }
  
