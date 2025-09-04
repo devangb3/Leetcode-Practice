@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Stack;
 
 public class RandomPractice {
     public boolean isValidSudoku(char[][] board) {
@@ -68,9 +69,22 @@ public class RandomPractice {
         }
         return ans;
     }
+    public String smallestNumber(String pattern) {
+        Stack<String> stack = new Stack<>();
+        String res = "";
+        for (int i = 0; i <= pattern.length(); i++) {
+           stack.add(Integer.toString(i+1));
+           if(i == pattern.length() || pattern.charAt(i) == 'I'){
+                while(!stack.isEmpty()){
+                    res += stack.pop();
+                }
+           }
+        }
+        return res;
+    }
     public static void main(String[] args) {
         RandomPractice rp = new RandomPractice();
-        System.out.println(Arrays.toString(rp.distributeCandies(7, 4)));
+        System.out.println(rp.smallestNumber("IIIDIDDD"));        
     }
 }
  
