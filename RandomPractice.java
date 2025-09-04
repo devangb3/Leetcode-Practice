@@ -82,6 +82,13 @@ public class RandomPractice {
         }
         return res;
     }
+    public int findClosest(int x, int y, int z) {
+        int diff1 = Math.abs(x-z);
+        int diff2 = Math.abs(y-z);
+        if(diff1 == diff2) return 0;
+        else if(diff1 < diff2) return 1;
+        else return 2;
+    }
     public static void main(String[] args) {
         RandomPractice rp = new RandomPractice();
         System.out.println(rp.smallestNumber("IIIDIDDD"));        
