@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,9 +90,47 @@ public class RandomPractice {
         else if(diff1 < diff2) return 1;
         else return 2;
     }
+    public int[] lexicographicallySmallestArray(int[] nums, int limit) {
+        List<int[]> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            list.add(new int[]{nums[i], i});
+        }
+        Collections.sort(list,Comparator.comparingInt(a -> a[0]));
+        List<List<int[]>> groupList = new ArrayList<>();
+        List<int[]> temp = new ArrayList<>();
+        temp.add(list.get(0));
+        groupList.add(temp);
+        int lastValue = list.get(0)[0], index = 1;
+        while(index < list.size()){
+            if(list.get(index)[0] - lastValue > limit){
+                List<int[]> groupElement = new ArrayList<>();
+                groupElement.add(list.get(index));
+                groupList.add(groupElement);
+            }
+            else{
+                groupList.get(groupList.size()-1).add(list.get(index));
+            }
+            lastValue = list.get(index)[0];
+            index++;
+        }
+        for(List<int[]> group : groupList){
+            List<Integer> valList = new ArrayList<>();
+            List<Integer> indexList = new ArrayList<>();
+            for(int[] entry : group){
+                valList.add(entry[0]);
+                indexList.add(entry[1]);
+            }
+            Collections.sort(valList);
+            Collections.sort(indexList);
+            for (int i = 0; i < valList.size(); i++) {
+                nums[indexList.get(i)] = valList.get(i);
+            }
+        }
+        return nums;
+    }
     public static void main(String[] args) {
         RandomPractice rp = new RandomPractice();
-        System.out.println(rp.smallestNumber("IIIDIDDD"));        
+        System.out.println(Arrays.toString(rp.lexicographicallySmallestArray(new int[]{1,7,6,18,2,4}, 3)));        
     }
 }
  
