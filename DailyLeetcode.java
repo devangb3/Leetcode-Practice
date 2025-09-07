@@ -283,10 +283,31 @@ public class DailyLeetcode {
         }
         return grid;
     }
+    public int[] sumZero(int n){
+        int[] arr = new int[n];
+        int number = 1000;
+        if(n%2 == 0){
+            for (int i = 0; i < arr.length-1; i++) {
+                arr[i] = number;
+                arr[i+1] = -1 * number;
+                i++;
+                number--;
+            }
+        }
+        else{
+            for (int i = 0; i < arr.length-1; i++) {
+                arr[i] = number;
+                arr[i+1] = -1 * number;
+                i++;
+                number--;
+            }
+            arr[n-1] = 0;
+        }
+        return arr;
+    }
+    
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        int[][] grid = new int[][]{{1,7,3},{9,8,2},{4,5,6}};
-        int[][] ans = dc.sortMatrix(grid);
-        for(int[] row : ans) System.out.println(Arrays.toString(row));
+        System.out.println(4 & 8 & 13 & 25);
     }
 }
