@@ -327,6 +327,14 @@ public class DailyLeetcode {
         }
         return Math.min(countOdd, countEven);
     }
+    public int repeatedNTimes(int[] nums){
+       HashSet<Integer> set = new HashSet<>();
+       for(int num : nums){
+            if(set.contains(num)) return num;
+            set.add(num);
+       }
+        return 0;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
         System.out.println(dc.minCostToMoveChips(new int[]{1,2,3}));
