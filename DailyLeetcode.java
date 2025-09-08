@@ -335,10 +335,42 @@ public class DailyLeetcode {
        }
         return 0;
     }
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+        return shoppingOffersRec(new HashMap(), price, special, needs);
+    }
+    private int shoppingOffersRec(HashMap<List<Integer>, Integer> map, List<Integer> price, List<List<Integer>> special, List<Integer> currentNeed){
+        boolean allZeroes = true;
+        for(int need : currentNeed){
+            if(need != 0){
+                allZeroes = false;
+                break;
+            } 
+        }
+        if(allZeroes) return 0;
+        if(map.containsKey(currentNeed)) return map.get(currentNeed);
+        int minCost = 0;
+        for (int i = 0; i < currentNeed.size(); i++) {
+            minCost += currentNeed.get(i) * price.get(i);
+        }
+        for(List<Integer> offer : special){
+            List<Integer> newNeeds = new ArrayList();
+            boolean skipOffer = false;
+            for (int i = 0; i < currentNeed.size(); i++) {
+                int val = currentNeed.get(i) - offer.get(i);
+                if(val < 0) skipOffer = true;
+                else newNeeds.add(val);
+            }
+            if(!skipOffer){
+                int potentialMinCost = offer.get(offer.size()-1) + shoppingOffersRec(map, price, special, newNeeds);
+                minCost = Math.min(minCost, potentialMinCost);
+            }
+        }
+        map.put(currentNeed, minCost);
+        return minCost;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.minCostToMoveChips(new int[]{1,2,3}));
-        //System.out.println(dc.minCostToMoveChips(new int[]{6,4,7,8,2,10,2,7,9,7}));
+        System.out.println(dc.shoppingOffers(new ArrayList<>(List.of(2,5)), new ArrayList<>(List.of(new ArrayList<>(List.of(3,0,5)), new ArrayList<>(List.of(1,2,10)))), new ArrayList<>(List.of(3,2))));
         
     }
 }
