@@ -305,9 +305,32 @@ public class DailyLeetcode {
         }
         return arr;
     }
-    
+    public int[] getNoZeroIntegers(int n) {
+        int[] ans = new int[2];
+        for (int i = 1; i < n; i++) {
+            if(!containsZero(n-i) && !containsZero(i)) return new int[]{i, n-i};
+        }
+        return ans;
+    }
+    private boolean containsZero(int num){
+        while(num > 0){
+            if(num % 10 == 0) return true;
+            num /= 10;
+        }
+        return false;
+    }
+    public int minCostToMoveChips(int[] position) {
+        int countOdd = 0, countEven = 0;
+        for (int i = 0; i < position.length; i++) {
+            if(position[i] % 2 == 0) countEven++;
+            else countOdd++;
+        }
+        return Math.min(countOdd, countEven);
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(4 & 8 & 13 & 25);
+        System.out.println(dc.minCostToMoveChips(new int[]{1,2,3}));
+        //System.out.println(dc.minCostToMoveChips(new int[]{6,4,7,8,2,10,2,7,9,7}));
+        
     }
 }
