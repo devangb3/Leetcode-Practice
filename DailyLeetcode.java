@@ -368,9 +368,38 @@ public class DailyLeetcode {
         map.put(currentNeed, minCost);
         return minCost;
     }
+    private static final int MOD = 1_000_000_007;  // 10^9 + 7
+    public int peopleAwareOfSecret(int n, int delay, int forget) {
+        HashMap<Integer, Long> knowsButDelayed = new HashMap<>();
+        HashMap<Integer, Long> spreading = new HashMap<>();
+        knowsButDelayed.put(1,1L);
+        for (int i = 1+delay; i <= n; i++) {
+            HashMap<Integer, Long> copy = new HashMap<>(knowsButDelayed);
+            for(int key : copy.keySet()){
+                if(key <= i-delay){
+                    spreading.put(key, knowsButDelayed.get(key));
+                    knowsButDelayed.remove(key);
+                }
+            }
+            copy = new HashMap<>(spreading);
+            for(int key : copy.keySet()){
+                if(key + forget == i) {
+                    spreading.remove(key);
+                }
+                else{
+                    long newCount = (knowsButDelayed.getOrDefault(i,0L) + spreading.get(key)) % MOD;
+                    knowsButDelayed.put(i, newCount);
+                }
+            }
+        }
+        long count = 0;
+        for(int key : spreading.keySet()) count = (count + spreading.get(key)) % MOD;
+        for(int key : knowsButDelayed.keySet()) count = (count + knowsButDelayed.get(key)) % MOD;
+        return (int) count;
+    }
+    
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.shoppingOffers(new ArrayList<>(List.of(2,5)), new ArrayList<>(List.of(new ArrayList<>(List.of(3,0,5)), new ArrayList<>(List.of(1,2,10)))), new ArrayList<>(List.of(3,2))));
-        
+        System.out.println(dc.peopleAwareOfSecret(684,18,496));
     }
 }
