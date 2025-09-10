@@ -418,11 +418,44 @@ public class DailyLeetcode {
         }
         return maxLength;
     }
+    public int minimumTeachings(int n, int[][] languages, int[][] friendships) {
+        HashMap<Integer, HashSet<Integer>> map = new HashMap<>();
+        HashSet<Integer> languagesSet = new HashSet<>();
+        for (int i = 0; i < languages.length; i++) {
+            HashSet<Integer> set = new HashSet<>();
+            for(int j=0; j< languages[i].length; j++){
+                set.add(languages[i][j]);
+                languagesSet.add(languages[i][j]);
+            }
+            map.put(i+1, set);
+        }
+        HashSet<Integer> unHappy = new HashSet<>();
+        for(int[] friendship : friendships){
+            boolean isOverlap = false;
+            for(int lang : map.get(friendship[0])){
+                if(map.get(friendship[1]).contains(lang)){
+                    isOverlap = true;
+                    break;
+                }
+            }
+            if(!isOverlap){
+                unHappy.add(friendship[0]);
+                unHappy.add(friendship[1]);
+            }
+        }
+        
+        HashMap<Integer, Integer> languagesCount = new HashMap<>();
+        for(int person : unHappy){
+            for(int langSpoken : map.get(person)){
+                languagesCount.put(langSpoken, languagesCount.getOrDefault(langSpoken, 0)+1);
+            }
+        }
+        int maxPop = 0;
+        for(int val : languagesCount.values()) maxPop = Math.max(maxPop, val);
+        return unHappy.size()-maxPop;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-         System.out.println(dc.maxSubarrayLength(new int[]{1,2,3,1,2,3,1,2}, 2));
-        //System.out.println(dc.maxSubarrayLength(new int[]{1}, 1));
-        //System.out.println(dc.maxSubarrayLength(new int[]{1,4,4,3}, 1)); 
-        //System.out.println(dc.maxSubarrayLength(new int[]{1,1000000000}, 2));
+        System.out.println(dc.minimumTeachings(2, new int[][]{{1},{2},{1,2}}, new int[][]{{1,2},{1,3},{2,3}}));
     }
 }
