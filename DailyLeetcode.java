@@ -369,7 +369,7 @@ public class DailyLeetcode {
         return minCost;
     }
     private static final int MOD = 1_000_000_007;  // 10^9 + 7
-    public int peopleAwareOfSecret(int n, int delay, int forget) {
+    public int peopleAwareOfSecret(int n, int delay, int forget) { 
         HashMap<Integer, Long> knowsButDelayed = new HashMap<>();
         HashMap<Integer, Long> spreading = new HashMap<>();
         knowsButDelayed.put(1,1L);
@@ -397,9 +397,32 @@ public class DailyLeetcode {
         for(int key : knowsButDelayed.keySet()) count = (count + knowsButDelayed.get(key)) % MOD;
         return (int) count;
     }
-    
+    public int maxSubarrayLength(int[] nums, int k) {
+        int maxLength = 0;
+        if(nums.length == 1) return 1;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int left = 0, right = 0;
+        while(right < nums.length){
+            int val = map.getOrDefault(nums[right], 0)+1;
+            map.put(nums[right], val);
+            if(val > k){
+                while(map.get(nums[right]) != k){
+                    int temp = map.get(nums[left]) - 1;
+                    if(temp == 0) map.remove(nums[left]);
+                    else map.put(nums[left], temp);
+                    left++;
+                }
+            }
+            right++;
+            maxLength = Math.max(maxLength, right-left);
+        }
+        return maxLength;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.peopleAwareOfSecret(684,18,496));
+         System.out.println(dc.maxSubarrayLength(new int[]{1,2,3,1,2,3,1,2}, 2));
+        //System.out.println(dc.maxSubarrayLength(new int[]{1}, 1));
+        //System.out.println(dc.maxSubarrayLength(new int[]{1,4,4,3}, 1)); 
+        //System.out.println(dc.maxSubarrayLength(new int[]{1,1000000000}, 2));
     }
 }
