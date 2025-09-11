@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 public class DailyLeetcode {
     public String triangleType(int[] nums){
@@ -467,8 +468,34 @@ public class DailyLeetcode {
         if(right == goal.length())return true;
         return false;
     }
+    public String sortVowels(String s) {
+        int[] freq = new int[128];
+        for(Character c : s.toCharArray()){
+            if(isVowel(c))  freq[c]++;
+        }
+        char[] order = new char[]{'A','E','I','O','U','a','e','i','o','u'};
+        int index = 0;
+
+        StringBuilder sb = new StringBuilder();
+        for(char c : s.toCharArray()){
+            if(isVowel(c)){
+                while(index < order.length && freq[order[index]] == 0) index++;
+                sb.append(order[index]);
+                freq[order[index]]--;
+            }
+            else{
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+    private boolean isVowel(Character c){
+        Set<Character> VOWELS = Set.of('a', 'e', 'i', 'o', 'u');
+        return VOWELS.contains(Character.toLowerCase(c));
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.rotateString("abcde", "cdeab"));
+        System.out.println(dc.sortVowels("lYmpH"));
     }
 }
+//A,E,I,O,U,a,e,i,o,u
