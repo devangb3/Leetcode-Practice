@@ -454,8 +454,21 @@ public class DailyLeetcode {
         for(int val : languagesCount.values()) maxPop = Math.max(maxPop, val);
         return unHappy.size()-maxPop;
     }
+    public boolean rotateString(String s, String goal) {
+        if(s.length() != goal.length()) return false;
+        int left = 0, right = 0;
+        while(s.charAt(left) != goal.charAt(right)) left++;
+        while(right < goal.length() && s.charAt(left) == goal.charAt(right)){
+            left++;
+            right++;
+            if(left == s.length()) left = 0;
+        }
+        
+        if(right == goal.length())return true;
+        return false;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.minimumTeachings(2, new int[][]{{1},{2},{1,2}}, new int[][]{{1,2},{1,3},{2,3}}));
+        System.out.println(dc.rotateString("abcde", "cdeab"));
     }
 }
