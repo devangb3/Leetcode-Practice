@@ -493,6 +493,16 @@ public class DailyLeetcode {
         Set<Character> VOWELS = Set.of('a', 'e', 'i', 'o', 'u');
         return VOWELS.contains(Character.toLowerCase(c));
     }
+    public boolean doesAliceWin(String s) {
+        int numberOfOdds = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if(isVowel(s.charAt(i))) numberOfOdds++;
+        }
+        if(numberOfOdds == 0) return false;
+        if(numberOfOdds%2 == 1)return true;
+        
+        return true;
+    }
     public static void main(String[] args) {
         DailyLeetcode dc = new DailyLeetcode();
         System.out.println(dc.sortVowels("lYmpH"));
