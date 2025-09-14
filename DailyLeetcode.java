@@ -493,6 +493,7 @@ public class DailyLeetcode {
         Set<Character> VOWELS = Set.of('a', 'e', 'i', 'o', 'u');
         return VOWELS.contains(Character.toLowerCase(c));
     }
+    private static final Set<Character> VOWELS = Set.of('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U');
     public boolean doesAliceWin(String s) {
         int numberOfOdds = 0;
         for (int i = 0; i < s.length(); i++) {
@@ -503,9 +504,44 @@ public class DailyLeetcode {
         
         return true;
     }
+    public String[] spellchecker(String[] wordlist, String[] queries) {
+        HashSet<String> wordSet = new HashSet<>();
+        HashMap<String, String> lowerCaseWordSet = new HashMap<String, String>();
+        HashMap<String, String> vowelAgnosticWordSet = new HashMap<String, String>();
+        for(String word : wordlist){
+            wordSet.add(word);
+            if(!lowerCaseWordSet.containsKey(word.toLowerCase())) lowerCaseWordSet.put(word.toLowerCase(), word);
+            StringBuilder temp = new StringBuilder();
+            for (int i = 0; i < word.length(); i++) {
+                if(VOWELS.contains(word.charAt(i))) temp.append("*");
+                else temp.append(word.charAt(i));
+            }
+            if(!vowelAgnosticWordSet.containsKey(temp.toString().toLowerCase())) vowelAgnosticWordSet.put(temp.toString().toLowerCase(), word);
+        } 
+
+        for (int i = 0; i < queries.length; i++) {
+            String query = queries[i];
+            if(wordSet.contains(query)){
+                queries[i] = query;
+            }
+            else if(lowerCaseWordSet.containsKey(query.toLowerCase())){
+                queries[i] = lowerCaseWordSet.get(query.toLowerCase());
+            }
+            else{
+                StringBuilder temp = new StringBuilder();
+                for (int j = 0; j < query.length(); j++) {
+                    if(VOWELS.contains(query.charAt(j))) temp.append("*");
+                    else temp.append(query.charAt(j));
+                }
+                if(vowelAgnosticWordSet.containsKey(temp.toString().toLowerCase())) queries[i] = vowelAgnosticWordSet.get(temp.toString().toLowerCase());
+                else queries[i] = "";
+            }
+        }
+        return queries;
+    }
     public static void main(String[] args) {
-        DailyLeetcode dc = new DailyLeetcode();
-        System.out.println(dc.sortVowels("lYmpH"));
+        DailyLeetcode dl = new DailyLeetcode();
+        System.out.println(Arrays.toString(dl.spellchecker(new String[]{"KiTe","kite","hare","Hare"}, new String[]{"kite","Kite","KiTe","Hare","HARE","Hear","hear","keti","keet","keto"})));
     }
 }
 //A,E,I,O,U,a,e,i,o,u
