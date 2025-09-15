@@ -539,9 +539,27 @@ public class DailyLeetcode {
         }
         return queries;
     }
+    public int canBeTypedWords(String text, String brokenLetters) {
+        HashSet<Character> broken = new HashSet<>();
+        for (int i = 0; i < brokenLetters.length(); i++) {
+            broken.add(brokenLetters.charAt(i));
+        }
+        List<String> list = Arrays.asList(text.split(" "));
+       
+        int count = 0;
+        for(String entry : list){
+            for (int i = 0; i < entry.length(); i++) {
+                if(broken.contains(entry.charAt(i))){
+                    count++;
+                    break;
+                }
+            }
+        }
+        return list.size()-count;
+    }
     public static void main(String[] args) {
         DailyLeetcode dl = new DailyLeetcode();
-        System.out.println(Arrays.toString(dl.spellchecker(new String[]{"KiTe","kite","hare","Hare"}, new String[]{"kite","Kite","KiTe","Hare","HARE","Hear","hear","keti","keet","keto"})));
+        System.out.println(dl.canBeTypedWords("hello world", "ad"));
     }
 }
 //A,E,I,O,U,a,e,i,o,u
