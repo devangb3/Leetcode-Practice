@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.Stack;
 
 public class DailyLeetcode {
     public String triangleType(int[] nums){
@@ -557,9 +558,40 @@ public class DailyLeetcode {
         }
         return list.size()-count;
     }
+     public List<Integer> replaceNonCoprimes(int[] nums){
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < nums.length; i++) {
+            stack.add(nums[i]);
+            while(stack.size() > 1){
+                int b = stack.pop(), a = stack.pop();
+                int gcd = gcd(a,b);
+                if(gcd > 1){
+                    stack.add(lcm(a,b,gcd));
+                }
+                else{
+                    stack.add(a);
+                    stack.add(b);
+                    break;
+                }
+            }
+        }
+        return new ArrayList<>(stack);
+    }
+    public int gcd(int a, int b){
+        while(b != 0){
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+    private int lcm(int a, int b, int gcd){
+        return (a/gcd) * b;
+    }
     public static void main(String[] args) {
         DailyLeetcode dl = new DailyLeetcode();
-        System.out.println(dl.canBeTypedWords("hello world", "ad"));
+        System.out.println(dl.gcd(99, 296225));
+        System.out.println(dl.replaceNonCoprimes(new int[]{31,97561,97561,97561,97561,97561,97561,97561,97561})); //
     }
 }
 //A,E,I,O,U,a,e,i,o,u
