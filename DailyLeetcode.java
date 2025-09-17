@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -588,10 +589,72 @@ public class DailyLeetcode {
     private int lcm(int a, int b, int gcd){
         return (a/gcd) * b;
     }
+    class FoodItem{
+        String food;
+        int rating;
+        public FoodItem(String food, int rating){
+            this.food = food;
+            this.rating = rating;
+        }
+    }
+    class FoodRatings {
+    HashMap<String, PriorityQueue<FoodItem>> map;
+    HashMap<String, String> foodtoCuisineMap;
+    HashMap<String, Integer> foodtoRatingMap;
+        public FoodRatings(String[] foods, String[] cuisines, int[] ratings) {
+            map = new HashMap<>();
+            foodtoCuisineMap = new HashMap<>();
+            foodtoRatingMap = new HashMap<>();
+            for (int i = 0; i < foods.length; i++) {
+                String cuisine = cuisines[i];
+                String food = foods[i];
+                int rating = ratings[i];
+                PriorityQueue queue;
+                if(!map.containsKey(cuisine)){
+                    queue = new PriorityQueue<FoodItem>(Comparator.comparingInt((FoodItem a) -> a.rating).reversed().thenComparing(a -> a.food));
+                }
+                else{
+                    queue = map.get(cuisine);
+                }
+                FoodItem f = new FoodItem(food, rating);
+                queue.add(f);
+                map.put(cuisine, queue);
+                foodtoRatingMap.put(food, rating);
+                foodtoCuisineMap.put(food, cuisine);
+            }
+        }
+    
+        public void changeRating(String food, int newRating) {
+            FoodItem f = new FoodItem(food, newRating);
+            String cuisine = foodtoCuisineMap.get(food);
+            PriorityQueue<FoodItem> queue = map.get(cuisine);
+            queue.add(f);
+            foodtoRatingMap.put(food, newRating);
+            map.put(cuisine, queue);
+        }
+    
+        public String highestRated(String cuisine) {
+            PriorityQueue<FoodItem> queue = map.get(cuisine);
+            FoodItem f = queue.peek();
+            while(foodtoRatingMap.get(f.food) != f.rating) {
+                queue.poll();
+                f = queue.peek();
+            }
+            return f.food;
+        }
+    }
     public static void main(String[] args) {
         DailyLeetcode dl = new DailyLeetcode();
-        System.out.println(dl.gcd(99, 296225));
-        System.out.println(dl.replaceNonCoprimes(new int[]{31,97561,97561,97561,97561,97561,97561,97561,97561})); //
+        FoodRatings fr = dl.new FoodRatings(new String[]{"emgqdbo","jmvfxjohq","qnvseohnoe","yhptazyko","ocqmvmwjq"}, 
+                                            new String[]{"snaxol","snaxol","snaxol","fajbervsj","fajbervsj"},
+                                            new int[]{2,6,18,6,5});
+        fr.changeRating("qnvseohnoe", 11);
+        System.out.println(fr.highestRated("fajbervsj"));
+        fr.changeRating("emgqdbo", 3);
+        fr.changeRating("jmvfxjohq", 9);
+        fr.changeRating("emgqdbo", 14);
+        System.out.println(fr.highestRated("fajbervsj"));
+        System.out.println(fr.highestRated("snaxol"));
     }
 }
 //A,E,I,O,U,a,e,i,o,u
