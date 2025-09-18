@@ -65,12 +65,25 @@ public class TreePractice {
         }
         return count;
     }
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if(root == null) return false;
+        return hasPathSumRec(root, targetSum, root.val);
+    }
+    private boolean hasPathSumRec(TreeNode curr, int targetSum, int sumSoFar){
+        if(sumSoFar == targetSum && curr != null && curr.left == null && curr.right == null) return true;
+        if(curr == null) return false;
+        int leftSumSoFar =  curr.left == null ? 0 : curr.left.val;
+        leftSumSoFar += sumSoFar;
+        int rightSumSoFar = curr.right == null ? 0 : curr.right.val;
+        rightSumSoFar += sumSoFar;
+        return hasPathSumRec(curr.left, targetSum, leftSumSoFar) || hasPathSumRec(curr.right, targetSum, rightSumSoFar);
+    }
     public static void main(String[] args) {
         TreePractice tp = new TreePractice();
         TreeNode root = tp.new TreeNode(1);
-        root.right = tp.new TreeNode(2);
-        root.right.left = tp.new TreeNode(3);
-        System.out.println(tp.inorderTraversal(root));
+        //root.left = tp.new TreeNode(2);
+        //root.right.left = tp.new TreeNode(3);
+        System.out.println(tp.hasPathSum(root, 1));
     }
     
 }
