@@ -643,18 +643,96 @@ public class DailyLeetcode {
             return f.food;
         }
     }
+    class TaskItem{
+        int taskId;
+        int priority;
+        public TaskItem(int taskId, int priority){
+            this.taskId = taskId;
+            this.priority = priority;
+        }
+    }
+    class TaskManager {
+    HashMap<Integer, Integer> taskToUserMap;
+    HashMap<Integer, Integer> taskToPriorityMap;
+    HashSet<Integer> removedTaskIds;
+    PriorityQueue<TaskItem> highestPriorityQueue;
+    
+
+    public TaskManager(List<List<Integer>> tasks) {
+        taskToUserMap = new HashMap<>();
+        taskToPriorityMap = new HashMap<>();
+        removedTaskIds = new HashSet<>();
+        highestPriorityQueue = new PriorityQueue<>(Comparator.comparingInt(( TaskItem a) -> a.priority).reversed().thenComparing((a,b) -> b.taskId - a.taskId));
+        for(List<Integer> task : tasks){
+            int userId = task.get(0), taskId = task.get(1), priority = task.get(2);
+            add(userId, taskId, priority);
+        }
+    }
+    
+    public void add(int userId, int taskId, int priority) {
+        TaskItem t = new TaskItem(taskId, priority);
+        if(removedTaskIds.contains(taskId)) removedTaskIds.remove(taskId);        
+        taskToUserMap.put(taskId, userId);
+        taskToPriorityMap.put(taskId, priority);
+        highestPriorityQueue.add(t);
+    }
+    
+    public void edit(int taskId, int newPriority) {
+        TaskItem t = new TaskItem(taskId, newPriority);
+        taskToPriorityMap.put(taskId, newPriority);
+        highestPriorityQueue.add(t);
+    }
+    
+    public void rmv(int taskId) {
+       removedTaskIds.add(taskId);
+    }
+    
+    public int execTop() {
+        if(highestPriorityQueue.isEmpty()) return -1;
+        TaskItem curr = highestPriorityQueue.poll();
+        while(removedTaskIds.contains(curr.taskId) || taskToPriorityMap.get(curr.taskId) != curr.priority){
+            if(highestPriorityQueue.isEmpty()) return -1;
+            curr = highestPriorityQueue.poll();
+        } 
+        
+        int userid = taskToUserMap.get(curr.taskId);
+        removedTaskIds.add(curr.taskId);
+        return userid;
+    }
+}
+
+/**
+ * Your TaskManager object will be instantiated and called as such:
+ * TaskManager obj = new TaskManager(tasks);
+ * obj.add(userId,taskId,priority);
+ * obj.edit(taskId,newPriority);
+ * obj.rmv(taskId);
+ * int param_4 = obj.execTop();
+ */
     public static void main(String[] args) {
         DailyLeetcode dl = new DailyLeetcode();
-        FoodRatings fr = dl.new FoodRatings(new String[]{"emgqdbo","jmvfxjohq","qnvseohnoe","yhptazyko","ocqmvmwjq"}, 
-                                            new String[]{"snaxol","snaxol","snaxol","fajbervsj","fajbervsj"},
-                                            new int[]{2,6,18,6,5});
-        fr.changeRating("qnvseohnoe", 11);
-        System.out.println(fr.highestRated("fajbervsj"));
-        fr.changeRating("emgqdbo", 3);
-        fr.changeRating("jmvfxjohq", 9);
-        fr.changeRating("emgqdbo", 14);
-        System.out.println(fr.highestRated("fajbervsj"));
-        System.out.println(fr.highestRated("snaxol"));
+        /* List<Integer> a = new ArrayList<>(List.of(1,101,10));
+        List<Integer> b = new ArrayList<>(List.of(2,102,20));
+        List<Integer> c = new ArrayList<>(List.of(3,103,15));
+        List<List<Integer>> all = new  ArrayList<>(List.of(a,b,c));
+        TaskManager tm = dl.new TaskManager(all);
+        tm.add(4,104,5);
+        tm.edit(102,9);
+        System.out.println(tm.execTop());
+        tm.rmv(101);
+        tm.add(5,105,15);
+        System.out.println(tm.execTop()); */
+        List<Integer> a = new ArrayList<>(List.of(1,101,8));
+        List<Integer> b = new ArrayList<>(List.of(2,102,20));
+        List<Integer> c = new ArrayList<>(List.of(3,103,5));
+        List<List<Integer>> all = new  ArrayList<>(List.of(a,b,c));
+        TaskManager tm = dl.new TaskManager(all);
+        tm.add(4,104,5);
+        tm.edit(102,9);
+        System.out.println(tm.execTop());
+        tm.rmv(101);
+        tm.add(50,101,8);
+        System.out.println(tm.execTop());
     }
 }
 //A,E,I,O,U,a,e,i,o,u
