@@ -1,3 +1,11 @@
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+
 public class DailyQuestions {
     class Spreadsheet {
     int[][] grid;
@@ -44,15 +52,73 @@ public class DailyQuestions {
         return new int[]{row, col};
     }
 }
-    public static void main(String[] args) {
-        DailyQuestions dq = new DailyQuestions();
-        Spreadsheet s = dq.new Spreadsheet(3);
-        System.out.println(s.getValue("=5+7"));
-        s.setCell("A1", 10);
-        System.out.println(s.getValue("=A1+6"));
-        s.setCell("B2", 15);
-        System.out.println(s.getValue("=A1+B2"));
-        s.resetCell("A1");
-        System.out.println(s.getValue("=A1+B2"));
+    class Router {
+
+    Queue<List<Integer>> queue;
+    HashSet<List<Integer>> set;
+    HashMap<Integer, List<Integer>> destinationMap;
+    int limit;
+    public Router(int memoryLimit) {
+        queue = new LinkedList<>();
+        set = new HashSet<>();
+        destinationMap = new HashMap<>();
+        limit = memoryLimit;
+    }
+    
+    public boolean addPacket(int source, int destination, int timestamp) {
+        List<Integer> curr = new ArrayList<>(List.of(source, destination, timestamp));
+        if(set.contains(curr)) return false;
+        while(queue.size() >= limit){
+            List<Integer> removed = queue.poll();
+            set.remove(removed);
+            int removedDestination = removed.get(1);
+            int removedTimestamp = removed.get(2);
+            List<Integer> destinationTimeStampList = destinationMap.get(removed.get(1));
+            if(destinationTimeStampList != null){
+                destinationTimeStampList.remove(Integer.valueOf(removedTimestamp));
+                if(destinationTimeStampList.isEmpty()) destinationMap.remove(removedDestination);
+            }
+            
+        }
+        queue.add(curr);
+        set.add(curr);
+
+        destinationMap.computeIfAbsent(destination, k -> new ArrayList<>()).add(timestamp);
+
+        return true;
+    }
+    
+    public int[] forwardPacket() {
+        if(queue.isEmpty()) return new int[]{};
+        List<Integer> temp = queue.poll();
+        set.remove(temp);
+        List<Integer> destinationTimeStampList = destinationMap.get(temp.get(1));
+        if(destinationTimeStampList != null){
+            destinationTimeStampList.remove(temp.get(2));
+            if(destinationTimeStampList.isEmpty())  destinationMap.remove(temp.get(1));
+        }
+        
+        return temp.stream().mapToInt(a -> a).toArray();
+    }
+    
+    public int getCount(int destination, int startTime, int endTime) {
+        List<Integer> destinationTimeStampList = destinationMap.getOrDefault(destination, new ArrayList<>());
+        if(destinationTimeStampList.isEmpty()) return 0;
+        int startIndex = binarySearch(destinationTimeStampList, startTime);
+        int endIndex = binarySearch(destinationTimeStampList, endTime);
+        return endIndex - startIndex;
+    }
+    public int binarySearch(List<Integer> elements, int target){
+        int left = 0, right = elements.size()-1;
+        while(left <= right){
+            int mid = (left + right)/2;
+            if(elements.get(mid) < target) left = mid+1;
+            else if(elements.get(mid) > target) right = mid;
+        }
+        return left;
+    }
+}    
+public static void main(String[] args) {
+        
     }
 }
