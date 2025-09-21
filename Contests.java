@@ -1,4 +1,10 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class Contests {
     public int minOperations(int[] nums) {
@@ -69,8 +75,100 @@ public class Contests {
         }
         return count;
     }
+    public int smallestAbsent(int[] nums){
+        HashSet<Integer> set = new HashSet<>();
+        int sum = 0;
+        for(int num : nums){
+            set.add(num);
+            sum += num;
+        }
+        int avg = sum/nums.length;
+        int ans = avg > 0 ? avg + 1 : 1;
+        while(true){
+            if(!set.contains(ans))return ans;
+            else ans++;
+        }
+    }
+    public int minArrivalsToDiscard(int[] arrivals, int w, int m) {
+        int discarded = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        HashSet<Integer> removed = new HashSet<>();
+        int right = 0;
+        int left = right - w;
+        while(right < arrivals.length){
+            int rightVal = arrivals[right];
+            map.put(rightVal, map.getOrDefault(rightVal, 0)+1);
+            if(left>= 0 && !removed.contains(left)){
+                int leftVal = arrivals[left];
+                map.put(leftVal, map.get(leftVal)-1);
+                if(map.get(leftVal) == 0) map.remove(leftVal);
+            }
+            if(map.getOrDefault(rightVal,0) > m){
+                map.put(rightVal, map.get(rightVal)-1);
+                removed.add(right);
+                discarded++;
+            }
+            right++;
+            left = right -w;
+        }
+        return discarded;
+    }
+    public int[][] generateSchedule(int n) {
+        int[][] schedule = new int[n*(n-1)][2];
+        if(n < 5) return schedule;
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            queue.add(i);
+        }
+        for (int i = 0; i < n; i++) {
+            int a = queue.poll(), b = queue.poll();
+            schedule[i] = new int[]{a,b};
+            queue.add(a);
+            queue.add(b);
+        }
+        
+        for (int i = n; i < 2*n; i++) {
+            int a = queue.poll(), b = queue.poll();
+            schedule[i] = new int[]{b,a};
+            queue.add(a);
+            queue.add(b);
+        }
+        return schedule;
+    }
+    public int evenNumberBitwiseORs(int[] nums) {
+        int ans = 0;
+        for(int num : nums){
+            if(num % 2==0){
+                ans = ans | num;
+            }
+        }
+        return ans;
+    }
+    public long maxTotalValue(int[] nums, int k) {
+        long sum = 0;
+        long min = (long) Math.pow(10,9);
+        long max = 0;
+        for(int num : nums){
+            max = Math.max(max, num);
+            min = Math.min(min, num);
+        }
+        long diff = max - min;
+        sum = diff * k;
+        return sum;
+    }
+    public long maxTotalValue2(int[] nums, int k) {
+        long sum = 0;
+
+        return sum;
+    }
+    public void maxTotalValueRec(int[] nums, int k, long sum) {
+        if(k == 0) return; 
+        
+        return;
+    }
+    
     public static void main(String[] args) {
         Contests con = new Contests();
-        System.out.println(con.bowlSubarrays2(new int[]{5,1,2,3,4}));
+        System.out.println(con.evenNumberBitwiseORs(new int[]{1,2,3,4,5,6}));
     }
 }
