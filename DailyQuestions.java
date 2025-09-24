@@ -116,9 +116,51 @@ public class DailyQuestions {
             else if(elements.get(mid) > target) right = mid;
         }
         return left;
-    }
+    }     
 }    
-public static void main(String[] args) {
+    public String fractionToDecimal(int numerator, int denominator) {
+        if(numerator == 0) return "0";
+        HashMap<Long, Integer> map = new HashMap<>();
         
+        StringBuilder ans = new StringBuilder();
+
+        boolean isNumNegative = numerator < 0;
+        boolean isDenNegative = denominator < 0;
+        
+        long num = Math.abs((long) numerator);
+        long den = Math.abs((long) denominator);
+        
+
+        boolean isNegative = isNumNegative || isDenNegative;
+        if(isNumNegative && isDenNegative) isNegative = false;
+
+        ans.append(num/den);
+
+        long remainder = num % den;
+
+        if(remainder != 0){
+            ans.append(".");
+            while(remainder != 0){
+                if(map.containsKey(remainder)){
+                    int index = map.get(remainder);
+                    ans.insert(index, '(');
+                    ans.append(")");
+                    break;
+                }
+                else{
+                    map.put(remainder, ans.length());
+                    long next = (remainder*10)/den;
+                    ans.append(next);
+                    remainder = (remainder*10) % den;
+                }
+            }
+        }
+        if(isNegative) ans.insert(0, "-");
+        return ans.toString();
     }
+    public static void main(String[] args) {
+            DailyQuestions d = new DailyQuestions();
+            System.out.println(d.fractionToDecimal(-1,-2147483648));
+            
+        }
 }
