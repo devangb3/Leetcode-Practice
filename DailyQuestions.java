@@ -158,9 +158,29 @@ public class DailyQuestions {
         if(isNegative) ans.insert(0, "-");
         return ans.toString();
     }
+    public int minimumTotal(List<List<Integer>> triangle) {
+        Integer[][] matrix = new Integer[triangle.size()][triangle.size()];
+        
+        return minimumTotalRec(triangle, matrix, 0, 0);
+    }
+    private int minimumTotalRec(List<List<Integer>> triangle, Integer[][] matrix, int row, int col){
+        if(row == triangle.size()-1){
+            return triangle.get(row).get(col);
+        }
+        
+        if(matrix[row][col] != null) return matrix[row][col];
+        
+        int tempSum = triangle.get(row).get(col) +Math.min(
+                        minimumTotalRec(triangle, matrix, row+1, col),
+                        minimumTotalRec(triangle, matrix, row+1, col+1)
+                    );
+        
+        matrix[row][col] = tempSum;
+        return tempSum;
+    }
     public static void main(String[] args) {
             DailyQuestions d = new DailyQuestions();
-            System.out.println(d.fractionToDecimal(-1,-2147483648));
-            
+            List<List<Integer>> triangle = List.of(List.of(2), List.of(3,4), List.of(6,5,1), List.of(4,1,8,3));
+            System.out.println(d.minimumTotal(triangle));
         }
 }
