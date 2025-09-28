@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -178,9 +179,42 @@ public class DailyQuestions {
         matrix[row][col] = tempSum;
         return tempSum;
     }
+    public double largestTriangleArea(int[][] points) {
+        double maxArea = Integer.MIN_VALUE;
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i+1; j < points.length; j++) {
+                for (int k = j+1; k < points.length; k++){
+                    maxArea = Math.max(maxArea, calculateTriangleArea(points[i], points[j], points[k]));
+                }
+            }
+        }
+        return maxArea;
+    }
+    private double calculateTriangleArea(int[] pointA, int[] pointB, int[] pointC){
+        int x1 = pointA[0], y1 = pointA[1];
+        int x2 = pointB[0], y2 = pointB[1];
+        int x3 = pointC[0], y3 = pointC[1];
+        double area = 0.5* Math.abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2));
+        return area;
+    }
+    public int largestPerimeter(int[] nums){
+        int maxPerimeter = 0;
+        Arrays.sort(nums);
+        for (int i = nums.length-1; i >= 2; i--) {
+            int a= nums[i], b= nums[i-1], c= nums[i-2];
+            if(isTriangle(a, b, c)){
+                return a + b + c;
+            }
+        }
+        return maxPerimeter;
+    }
+    private boolean isTriangle(int a, int b, int c){
+        if(b + c > a) return true;
+        return false;
+    }
     public static void main(String[] args) {
             DailyQuestions d = new DailyQuestions();
-            List<List<Integer>> triangle = List.of(List.of(2), List.of(3,4), List.of(6,5,1), List.of(4,1,8,3));
-            System.out.println(d.minimumTotal(triangle));
+            System.out.println(d.largestPerimeter(new int[]{2,1,1,10}));
+
         }
 }
