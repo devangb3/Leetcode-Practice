@@ -245,9 +245,30 @@ public class DailyQuestions {
         return nums[0];
     }
 
+    public int maxTurbulenceSize(int[] arr){
+        int maxLen = 0;
+        boolean shouldBeGreater;
+        for (int i = 0; i < arr.length-1; i++) {
+            int j = i;
+            shouldBeGreater = arr[j] > arr[j+1];
+            while(j < arr.length-1){
+                if(shouldBeGreater){
+                    if(arr[j] <= arr[j+1]) break;
+                }
+                else{
+                    if(arr[j] >= arr[j+1]) break;
+                }
+                j++;
+                shouldBeGreater = !shouldBeGreater;
+            }
+            maxLen = Math.max(maxLen, j-i+1);
+        }
+        return maxLen;
+    }
+
     public static void main(String[] args) {
         DailyQuestions d = new DailyQuestions();
-        System.out.println(d.triangularSum(new int[]{1,2,3,4,5}));
-
+        System.out.println(d.maxTurbulenceSize(new int[]{9,4,2,10,7,8,8,1,9})); // >,>,<,>,<,=,>,<
+        //System.out.println(d.maxTurbulence2(new int[]{100,100,100}));
     }
 }
