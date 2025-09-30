@@ -235,15 +235,14 @@ public class DailyQuestions {
     }
 
     public int triangularSum(int[] nums) {
-        List<Integer> temp = Arrays.stream(nums).boxed().toList();
-        while(temp.size() > 1){
-            List<Integer> newList = new ArrayList<>();
-            for (int i = 0; i < temp.size()-1; i++) {
-                newList.add((temp.get(i) + temp.get(i+1)) % 10);
+        int n = nums.length;
+        while(n > 1){
+            for (int i = 0; i < n-1; i++) {
+                nums[i] = (nums[i] + nums[i+1])% 10;
             }
-            temp = newList;
+            n--;
         }
-        return temp.get(0);
+        return nums[0];
     }
 
     public static void main(String[] args) {
