@@ -265,10 +265,20 @@ public class DailyQuestions {
         }
         return maxLen;
     }
+    public int numWaterBottles(int numBottles, int numExchange) {
+        int sum = numBottles;
+        int empty = numBottles;
+        int full = 0;
+        while(empty >= numExchange)   {
+           full = empty / numExchange;
+           sum += full;
+           empty = (empty % numExchange) + full;
+        }
+        return sum;
+    }
 
     public static void main(String[] args) {
         DailyQuestions d = new DailyQuestions();
-        System.out.println(d.maxTurbulenceSize(new int[]{9,4,2,10,7,8,8,1,9})); // >,>,<,>,<,=,>,<
-        //System.out.println(d.maxTurbulence2(new int[]{100,100,100}));
+        System.out.println(d.numWaterBottles(15, 4));
     }
 }
