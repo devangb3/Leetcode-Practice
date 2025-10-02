@@ -276,9 +276,24 @@ public class DailyQuestions {
         }
         return sum;
     }
+    public int maxBottlesDrunk(int numBottles, int numExchange) {
+        int bottlesDrank = 0;
+        int fullBottles = numBottles;
+        int emptyBottles = 0;
+        while(true){
+            bottlesDrank += fullBottles;
+            emptyBottles += fullBottles;
+            fullBottles = 0;
+            if(numExchange > emptyBottles) break;
+            emptyBottles -= numExchange;
+            fullBottles++;
+            numExchange++;
+        }
+        return bottlesDrank;
+    }
 
     public static void main(String[] args) {
         DailyQuestions d = new DailyQuestions();
-        System.out.println(d.numWaterBottles(15, 4));
+        System.out.println(d.maxBottlesDrunk(10, 3));
     }
 }
