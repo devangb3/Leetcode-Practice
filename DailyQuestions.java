@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -291,7 +292,55 @@ public class DailyQuestions {
         }
         return bottlesDrank;
     }
-
+    class Point{
+        int x, y;
+        int height;
+        public Point(int x, int y, int height){
+            this.x = x;
+            this.y = y;
+            this.height = height;
+        }
+    }
+    public int trapRainWater(int[][] heightMap) {
+        int rows = heightMap.length, cols = heightMap[0].length;
+        boolean[][] visitedSet = new boolean[rows][cols];
+        PriorityQueue<Point> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a.height));
+        for (int j = 0; j < cols; j++) {
+            Point p = new Point(0, j, heightMap[0][j]);
+            queue.add(p);
+            visitedSet[0][j] = true;
+        }
+        for (int i = 1; i < rows; i++) {
+            Point p = new Point(i, 0, heightMap[i][0]);
+            queue.add(p);
+            visitedSet[i][0] = true;
+        }
+        for (int j = 1; j < cols; j++) {
+            Point p = new Point(rows-1, j, heightMap[rows-1][j]);
+            queue.add(p);
+            visitedSet[rows-1][j] = true;
+        }
+        for (int i = 1; i < rows; i++) {
+            Point p = new Point(i, cols-1, heightMap[i][cols-1]);
+            queue.add(p);
+            visitedSet[i][cols-1] = true;
+        }
+        int count = 0;
+        while(!queue.isEmpty()){
+            Point p = queue.poll();
+            int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+            for(int[] dir : dirs){
+                if(p.x + dir[0] >= rows || p.x + dir[0] < 0 || p.y + dir[1] >= cols || p.y + dir[1] < 0) continue;
+                Point neighbour = new Point(p.x + dir[0], p.y + dir[1], heightMap[p.x+dir[0]][p.y + dir[1]]);
+                if(visitedSet[neighbour.x][neighbour.y]) continue;
+                visitedSet[neighbour.x][neighbour.y] = true;
+                if(neighbour.height < p.height) count += p.height - neighbour.height;
+                neighbour.height = Math.max(neighbour.height, p.height);
+                queue.add(neighbour);
+            }
+        }
+        return count;
+    }
     public static void main(String[] args) {
         DailyQuestions d = new DailyQuestions();
         System.out.println(d.maxBottlesDrunk(10, 3));

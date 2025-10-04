@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 public class RandomPractice {
@@ -128,9 +130,72 @@ public class RandomPractice {
         }
         return nums;
     }
+    public boolean checkTwoChessboards(String coordinate1, String coordinate2) {
+        int x1 = coordinate1.charAt(0) - 'a' + 1;
+        int y1 = coordinate1.charAt(1) - 48 + 1;
+        int x2 = coordinate2.charAt(0) - 'a';
+        int y2 = coordinate2.charAt(1) - 48;
+        if((x1 + y1) % 2 == (x2 + y2) %2) return true;
+        return false;
+    }
+
+    class Router {
+        Queue<List<Integer>> queue;
+        HashSet<List<Integer>> storedPackets;
+        HashMap<Integer, HashSet<List<Integer>>> destinationMap;
+        int size;
+        public Router(int memoryLimit) {
+            queue = new LinkedList<>();
+            storedPackets = new HashSet<>();
+            destinationMap = new HashMap<>();
+            size = memoryLimit;
+        }
+        
+        public boolean addPacket(int source, int destination, int timestamp) {
+            List<Integer> temp = List.of(source, destination, timestamp);
+            if(storedPackets.contains(temp)) return false;
+            if(queue.size() == size){
+                List<Integer> tempRemoved = queue.poll();
+                storedPackets.remove(tempRemoved);
+            }
+            queue.add(temp);
+            storedPackets.add(temp);
+            destinationMap.computeIfAbsent(destination, k -> new HashSet<>()).add(List.of(source, timestamp));
+
+            return true;
+        }
+        
+        public int[] forwardPacket() {
+            while(!queue.isEmpty()){
+                List<Integer> temp = queue.poll();
+                if(storedPackets.contains(temp)){
+                    storedPackets.remove(temp);
+                    return temp.stream().mapToInt(a -> a).toArray();
+                } 
+            }
+            return new int[]{};
+        }
+        
+        public int getCount(int destination, int startTime, int endTime) {
+            int count = 0;
+            HashSet<List<Integer> > destinationSet = destinationMap.get(destination);
+            for (List<Integer> p : destinationSet){
+                List<Integer> temp = List.of(p.get(0), destination, p.get(1));
+                if(!storedPackets.contains(temp)) continue;
+                if(p.get(1) >= startTime && p.get(1) <= endTime) count++;
+            }
+            return count;
+        }
+    }
     public static void main(String[] args) {
         RandomPractice rp = new RandomPractice();
-        System.out.println(Arrays.toString(rp.lexicographicallySmallestArray(new int[]{1,7,6,18,2,4}, 3)));        
+        Router router = rp.new Router(5);
+        System.out.println(router.addPacket(4, 2, 1));
+        System.out.println(router.getCount(2, 1, 1));
+        System.out.println(Arrays.toString(router.forwardPacket()));
+        System.out.println(router.getCount(2, 1, 1));
+        System.out.println(router.addPacket(4, 2, 1));
+        System.out.println(router.getCount(2, 1, 1));
     }
 }
  
