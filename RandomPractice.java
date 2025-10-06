@@ -187,15 +187,27 @@ public class RandomPractice {
             return count;
         }
     }
+    public String reverseWords(String s) {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder ans = new StringBuilder();
+        int i = 0;
+        while(i<s.length()){
+            if(s.charAt(i) == ' '){
+                ans.append(sb.reverse());
+                ans.append(" ");
+                sb = new StringBuilder();
+            }
+            else{
+                sb.append(s.charAt(i));
+            }
+            i++;
+        }
+        ans.append(sb.reverse());
+        return ans.toString();
+    }
     public static void main(String[] args) {
         RandomPractice rp = new RandomPractice();
-        Router router = rp.new Router(5);
-        System.out.println(router.addPacket(4, 2, 1));
-        System.out.println(router.getCount(2, 1, 1));
-        System.out.println(Arrays.toString(router.forwardPacket()));
-        System.out.println(router.getCount(2, 1, 1));
-        System.out.println(router.addPacket(4, 2, 1));
-        System.out.println(router.getCount(2, 1, 1));
+        System.out.println(rp.reverseWords("Let's take LeetCode contest"));
     }
 }
  

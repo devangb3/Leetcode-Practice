@@ -341,8 +341,79 @@ public class DailyQuestions {
         }
         return count;
     }
+    public int maxArea(int[] height) {
+        int maxArea = 0;
+        int left = 0, right = height.length-1;
+        while(right > left){
+            int area;
+            if(height[left] < height[right]){
+                area = height[left] * (right - left);
+                left++;
+            }
+            else{
+                area = height[right] * (right - left);
+                right--;
+            }
+            maxArea = Math.max(area, maxArea);
+        }
+        return maxArea;
+    }
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        List<List<Integer>> ans = new ArrayList();
+        int m = heights.length, n = heights[0].length;
+        boolean[][] canReachPacific = new boolean[m][n];
+        boolean[][] canReachAtlantic = new boolean[m][n];
+        for (int i = 1; i < m; i++) {
+            pacificAtlanticDfs(heights, i, 0, canReachPacific);
+        }
+        for (int j = 0; j < n; j++) {
+            pacificAtlanticDfs(heights, 0, j, canReachPacific);
+        }
+        for (int i = 0; i < m; i++) {
+            pacificAtlanticDfs(heights, i, n-1, canReachAtlantic);
+        }
+        for (int j = 0; j < n; j++) {
+            pacificAtlanticDfs(heights, m-1, j, canReachAtlantic);
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if(canReachPacific[i][j] && canReachAtlantic[i][j]) ans.add(List.of(i,j));
+            }
+        }
+        return ans;
+    }
+    private void pacificAtlanticDfs(int[][] heights, int i, int j, boolean[][] store){
+        int m = heights.length, n = heights[0].length;
+        
+        store[i][j] = true;
+        int[][] directions = new int[][]{new int[]{0,1}, new int[]{1,0}, new int[]{0,-1}, new int[]{-1,0}};
+        for(int[] dir : directions){
+            int ni = i+dir[0], nj=j+dir[1];
+            if(ni >= 0 && nj >= 0 && ni<m && nj<n && !store[ni][nj] && heights[ni][nj] >= heights[i][j]){
+                pacificAtlanticDfs(heights, ni, nj, store);
+            }
+        }
+    }
+    private boolean pacificAtlanticHelper(int[][] heights, int i, int j, boolean[][] visited, boolean goPacific){
+        int m = heights.length, n = heights[0].length;
+        if(goPacific && (i==0 || j==0)) return true;
+        if(!goPacific && (i==m-1 || j==n-1)) return true;
+        visited[i][j] = true;
+        int[][] directions = new int[][]{new int[]{0,1}, new int[]{1,0}, new int[]{0,-1}, new int[]{-1,0}};
+        for(int[] dir : directions){
+            int ni = i + dir[0], nj = j + dir[1];
+            if(ni >= 0 && nj >= 0 && ni<m && nj < n && !visited[ni][nj]){
+                if(heights[ni][nj] <= heights[i][j]){
+                    if(pacificAtlanticHelper(heights, ni, nj, visited, goPacific)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     public static void main(String[] args) {
         DailyQuestions d = new DailyQuestions();
-        System.out.println(d.maxBottlesDrunk(10, 3));
+        System.out.println(d.pacificAtlantic(new int[][]{new int[]{2,1}, new int[]{1,2}}));
     }
 }
