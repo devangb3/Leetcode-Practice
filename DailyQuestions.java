@@ -412,8 +412,33 @@ public class DailyQuestions {
         }
         return false;
     }
+    public int[] successfulPairs(int[] spells, int[] potions, long success) {
+        int[] pairs = new int[spells.length];
+        Arrays.sort(potions);
+        for (int i = 0; i < spells.length; i++) {
+            int index = successfulPairsBinarySearch(potions, spells[i], success);
+            pairs[i] = potions.length-index;
+        }
+        return pairs;
+    }
+    public int successfulPairsBinarySearch(int[] potions, int spell, long success){
+        int left = 0, right = potions.length-1;
+        int closestIndex = potions.length;
+        while(left<=right){
+            int mid = (left + right)/2;
+            long temp = (long) potions[mid] * spell;
+            if(temp >= success){
+                closestIndex = mid;
+                right = mid-1;
+            }
+            else left = mid+1;
+        }
+        return closestIndex;
+    }
     public static void main(String[] args) {
         DailyQuestions d = new DailyQuestions();
-        System.out.println(d.pacificAtlantic(new int[][]{new int[]{2,1}, new int[]{1,2}}));
+        int[] spells = new int[]{40,11,24,28,40,22,26,38,28,10,31,16,10,37,13,21,9,22,21,18,34,2,40,40,6,16,9,14,14,15,37,15,32,4,27,20,24,12,26,39,32,39,20,19,22,33,2,22,9,18,12,5};
+        int[] potions = new int[]{31,40,29,19,27,16,25,8,33,25,36,21,7,27,40,24,18,26,32,25,22,21,38,22,37,34,15,36,21,22,37,14,31,20,36,27,28,32,21,26,33,37,27,39,19,36,20,23,25,39,40};
+        System.out.println(Arrays.toString(d.successfulPairs(spells, potions, 600)));
     }
 }
