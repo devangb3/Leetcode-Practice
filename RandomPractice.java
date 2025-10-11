@@ -205,6 +205,34 @@ public class RandomPractice {
         ans.append(sb.reverse());
         return ans.toString();
     }
+    public String oddString(String[] words) {
+        List<Integer> diff = new ArrayList<>();
+        String a = words[0], b = words[1], c = words[2];
+        List<Integer> aList = getDiffArray(a), bList = getDiffArray(b), cList = getDiffArray(c);
+        if(isEqual(aList, bList)) diff = aList;
+        else{
+            if(isEqual(bList, cList)) return a;
+            else if(isEqual(aList, cList)) return b;
+        }
+        for (int i = 2; i < words.length; i++) {
+            List<Integer> curr = getDiffArray(words[i]);
+            if(!isEqual(curr, diff)) return words[i];
+        }
+        return "";
+    }
+    private boolean isEqual(List<Integer> list1, List<Integer> list2){
+        for (int i = 0; i < list1.size(); i++) {
+            if(list1.get(i) != list2.get(i)) return false;
+        }
+        return true;
+    }
+    private List<Integer> getDiffArray(String s){
+        List<Integer> diffArray = new ArrayList<>();
+        for (int i = 1; i < s.length(); i++) {
+            diffArray.add(s.charAt(i) - s.charAt(i-1));
+        }
+        return diffArray;
+    }
     public static void main(String[] args) {
         RandomPractice rp = new RandomPractice();
         System.out.println(rp.reverseWords("Let's take LeetCode contest"));
