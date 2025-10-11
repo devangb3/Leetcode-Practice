@@ -444,8 +444,32 @@ public class DailyQuestions {
         for(int en : energy) maximumEnergy = Math.max(en, maximumEnergy);
         return maximumEnergy;
     }
+    public long maximumTotalDamage(int[] power) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int p : power){
+            map.put(p, map.getOrDefault(p, 0)+1);
+        }
+        List<Integer> keys = new ArrayList<>(map.keySet());
+        keys.sort(Comparator.naturalOrder());
+        long[] dp = new long[keys.size()];
+        dp[0] = (long)keys.get(0) * map.get(keys.get(0));
+        for (int i = 1; i < dp.length; i++) {
+            int key = keys.get(i);
+            long pow = (long)key * map.get(key);
+            int j = i-1;
+            while(j >= 0){
+                if(keys.get(i) - keys.get(j) > 2){
+                    pow += dp[j];
+                    break;
+                }
+                j--;
+            }
+            dp[i]  = Math.max(dp[i-1], pow);
+        }
+        return dp[dp.length-1];
+    }
     public static void main(String[] args) {
         DailyQuestions d = new DailyQuestions();
-        System.out.println(d.maximumEnergy(new int[]{-2,-3,-1}, 2));
+       System.out.println(d.maximumTotalDamage(new int[]{7,1,6,6}));
     }
 }
